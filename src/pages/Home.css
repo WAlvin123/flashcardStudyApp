@@ -1,0 +1,17 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.deck-section {
+  height:250px;
+  width:600px;
+  overflow: visible;
+}
+
+
+.card-section {
+  height:250px;
+  width:600px;
+  overflow:visible;
+}
