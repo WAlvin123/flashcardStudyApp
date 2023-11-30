@@ -1,17 +1,27 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
-
-.deck-section {
-  height:250px;
-  width:600px;
+  background-color: white;
   overflow: visible;
+  padding-bottom: 20px;
 }
 
+.decks {
+  padding-bottom: 20px;
+  width: 50vw;
+  overflow: visible;
+  background-color: white;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
 
-.card-section {
-  height:250px;
-  width:600px;
-  overflow:visible;
+.cards {
+  padding-bottom: 20px;
+  width: 50vw;
+  overflow: visible;
+  background-color: white;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }

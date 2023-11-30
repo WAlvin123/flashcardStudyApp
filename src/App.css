@@ -28,6 +28,13 @@
   color: #61dafb;
 }
 
+.navbar {
+  display: grid;
+  grid-template-columns: 120px 120px 120px 160px 185px; 
+  justify-content:center;
+  background-color: black;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

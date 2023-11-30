@@ -17,6 +17,9 @@ export const Home = () => {
   const [decks, setDecks] = useDeckState()
   const [inputValue, setInputValue] = useState('')
   const [filteredDeck, setFilteredDeck] = useState([])
+  const [filteredDeckIndex, setFilteredDeckIndex] = useState(0)
+  const [isItemsVisible, setIsItemsVisible] = useState(false)
+
 
   const createDeck = () => {
     if (decks.some(deck => deck.name == inputValue)) {
@@ -56,63 +59,85 @@ export const Home = () => {
     const deckIndex = decks.findIndex(deck => submission.deck === deck.name)
     const selectedDeck = decks[deckIndex]
 
-    if (selectedDeck.cards.some((card) => card.front == submission.front
-      && card.back == submission.back)) {
-      console.log('card exists')
+    if (submission.deck == undefined) {
+      console.log('Invalid deck')
     } else {
-      const newCard = {
-        front: submission.front,
-        back: submission.back,
-        id: selectedDeck.cards.length == 0 || selectedDeck.cards[selectedDeck.cards.length - 1].id + 1
-      }
+      if (selectedDeck.cards.some((card) => card.front == submission.front
+        && card.back == submission.back)) {
+        console.log('card exists')
+      } else {
+        const newCard = {
+          front: submission.front,
+          back: submission.back,
+          id: selectedDeck.cards.length == 0 || selectedDeck.cards[selectedDeck.cards.length - 1].id + 1
+        }
 
-      const updatedDeck = { ...selectedDeck, cards: [...selectedDeck.cards, newCard] }
-      const updatedDecks = [...decks.slice(0, deckIndex), updatedDeck, ...decks.slice(deckIndex + 1)]
-      setDecks(updatedDecks)
-      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+        const updatedDeck = { ...selectedDeck, cards: [...selectedDeck.cards, newCard] }
+        const updatedDecks = [...decks.slice(0, deckIndex), updatedDeck, ...decks.slice(deckIndex + 1)]
+        setDecks(updatedDecks)
+        localStorage.setItem('decks', JSON.stringify(updatedDecks))
+      }
     }
   }
 
   const handleChange = (selectedDeck) => {
     const filteredDeck = decks.find((deck) => deck.name === selectedDeck)
+    const filteredDeckIndex = decks.indexOf(filteredDeck)
     setFilteredDeck(filteredDeck)
+    setFilteredDeckIndex(filteredDeckIndex)
   }
 
+  const removeCard = (id) => {
+    setDecks(prevDecks => {
+      const updatedDecks = prevDecks.map((deck) => {
+        if (deck.name == filteredDeck.name) {
+          const updatedCards = deck.cards.filter((card) => {
+            return card.id !== id
+          })
+          return { ...deck, cards: updatedCards };
+        } else {
+          return deck
+        }
+      })
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+      return updatedDecks
+    })
+    
+  };
+
   return (
-    <div class='container'>
-      <div class='deck-section'>
+    <div>
+      <h2>Home</h2>
+      <p>A simple flashcard study application where you can choose between <br />
+        multiple choice, matching the two sides of the card, and short answer.
+      </p>
+      <div class='container'>
         <div class='decks'>
           <h2>Create Deck</h2>
           <input onChange={(event) => { setInputValue(event.target.value) }} />
           <button onClick={createDeck}>Create</button>
           <h2>View Deck</h2>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <table class='view-deck' style={{ backgroundColor: 'black' }}>
-              <th style={{ width: '150px', backgroundColor: 'white' }}>Name</th>
-              <th style={{ width: '150px', backgroundColor: 'white' }}>Amount of Cards</th>
-              <th style={{ width: '60px', backgroundColor: 'white' }}>Remove</th>
+          <table class='view-deck' style={{ backgroundColor: 'black' }}>
+            <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
+            <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Amount of Cards</th>
 
-              {decks.map((deck) => {
-                return (
-                  <tr>
-                    <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
-                    <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
-                    <button onClick={
-                      () => { removeDeck(deck.id) }
-                    }>Remove Deck</button>
-                  </tr>
-                )
-              })}
-            </table>
-          </div>
+            {decks.map((deck) => {
+              return (
+                <tr>
+                  <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
+                  <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
+                  <button onClick={
+                    () => { removeDeck(deck.id) }
+                  }>Remove Deck</button>
+                </tr>
+              )
+            })}
+          </table>
         </div>
-      </div>
-
-      <div class='card-section'>
-        <h2>
-          Create card
-        </h2>
         <div class='cards'>
+          <h2>
+            Create card
+          </h2>
           <form onSubmit={handleSubmit(createCard)}>
             <input {...register('front')} />
             <input {...register('back')} />
@@ -127,13 +152,18 @@ export const Home = () => {
             </select>
             <input type="submit" />
           </form>
-        </div>
-        <h2>
-          View card
-        </h2>
-        <div>
+
+          <h2>
+            View card
+          </h2>
           <select onChange={(event => {
-            handleChange(event.target.value)
+            if (event.target.value !== '------') {
+              handleChange(event.target.value)
+              setIsItemsVisible(true)
+              console.log(filteredDeck)
+            } else {
+              setIsItemsVisible(false)
+            }
           }
           )}>
             <option>------</option>
@@ -145,24 +175,21 @@ export const Home = () => {
               )
             })}
           </select>
-          <div>
-            {filteredDeck && filteredDeck.cards && (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <table style={{backgroundColor:"black"}}>
-                  <th style={{backgroundColor:"black", color:"white"}}>Front</th>
-                  <th style={{backgroundColor:"black", color:"white"}}>Back</th>
-                  {filteredDeck.cards.map((card) => {
-                    return (
-                      <tr style={{backgroundColor:"white"}}>
-                        <td>{card.front}</td>
-                        <td>{card.back}</td>
-                      </tr>
-                    )
-                  })}
-                </table>
-              </div>
-            )}
-          </div>
+          {isItemsVisible && (
+            <table style={{ backgroundColor: "black" }}>
+              <th style={{ backgroundColor: "black", color: "white" }}>Front</th>
+              <th style={{ backgroundColor: "black", color: "white" }}>Back</th>
+              {decks[filteredDeckIndex].cards.map((card) => {
+                return (
+                  <tr style={{ backgroundColor: "white" }}>
+                    <td>{card.front}</td>
+                    <td>{card.back}</td>
+                    <button onClick={() => { removeCard(card.id) }}>Remove Card</button>
+                  </tr>
+                )
+              })}
+            </table>
+          )}
         </div>
       </div>
     </div>

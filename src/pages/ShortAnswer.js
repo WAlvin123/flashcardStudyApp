@@ -70,7 +70,7 @@ export const ShortAnswer = () => {
             <h2>
               {randomCards[0].front}<button onClick={() => {
                 setShowAnswer(!showAnswer)
-              }}>Show Answer</button> 
+              }}>Show Answer</button>
             </h2>
             {showAnswer && randomCards[0].back}
             <p></p>

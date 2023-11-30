@@ -114,7 +114,7 @@ export const Matching = () => {
       {(modalState == true && columnOne.length !== 0) && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            <div style={{ display: 'flex', justifyContent: "center" }}>
+            <div className='decks-table' style={{ display: 'flex', justifyContent: "center" }}>
               <table style={{ backgroundColor: "black", color: 'white' }}>
                 <th width='200px'>Front</th>
                 <th width='200px'>Back</th>

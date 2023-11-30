@@ -3,10 +3,10 @@ import { Link } from "react-router-dom"
 export const Navbar = () => {
   return (
     <div className="navbar">
-      <Link to={'/'}>Home</Link>
-      <Link to={'/multiplechoice'}>Multiple Choice</Link>
-      <Link to={'/matching'}>Matching</Link>
-      <Link to={'/shortanswer'}>Short Answer</Link>
+      <Link to={'/'} style={{color:'white', textDecoration:'none'}}>Home</Link>
+      <Link to={'/multiplechoice'} style={{color:'white', textDecoration:'none'}}>Multiple Choice</Link>
+      <Link to={'/matching'} style={{color:'white', textDecoration:'none'}}>Matching</Link>
+      <Link to={'/shortanswer'} style={{color:'white', textDecoration:'none'}}>Short Answer</Link>
     </div>
   )
 }

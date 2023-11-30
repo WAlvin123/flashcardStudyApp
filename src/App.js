@@ -10,6 +10,7 @@ function App() {
 
   return (
     <div className="App">
+      <h2>Study Application</h2>
       <Router>
         <Navbar />
         <Routes>
