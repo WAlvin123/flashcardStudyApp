@@ -4,9 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
 import "./Home.css"
+// TODO: Make deck removable even when viewing (Or make deck unremovable when viewing)
 
 export const Home = () => {
-
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
     if (storedDecks) {
@@ -59,7 +59,7 @@ export const Home = () => {
     const deckIndex = decks.findIndex(deck => submission.deck === deck.name)
     const selectedDeck = decks[deckIndex]
 
-    if (submission.deck == undefined) {
+    if (selectedDeck == undefined) {
       console.log('Invalid deck')
     } else {
       if (selectedDeck.cards.some((card) => card.front == submission.front
@@ -71,11 +71,18 @@ export const Home = () => {
           back: submission.back,
           id: selectedDeck.cards.length == 0 || selectedDeck.cards[selectedDeck.cards.length - 1].id + 1
         }
-
-        const updatedDeck = { ...selectedDeck, cards: [...selectedDeck.cards, newCard] }
-        const updatedDecks = [...decks.slice(0, deckIndex), updatedDeck, ...decks.slice(deckIndex + 1)]
-        setDecks(updatedDecks)
-        localStorage.setItem('decks', JSON.stringify(updatedDecks))
+        setDecks(prevDecks => {
+          const updatedDecks = prevDecks.map((deck) => {
+            if (submission.deck == deck.name) {
+              const updatedCards = [...deck.cards, newCard]
+              return { ...deck, cards: updatedCards }
+            } else {
+              return deck
+            }
+          })
+          localStorage.setItem('decks', JSON.stringify(updatedDecks))
+          return updatedDecks
+        })
       }
     }
   }
@@ -102,7 +109,7 @@ export const Home = () => {
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
       return updatedDecks
     })
-    
+
   };
 
   return (
@@ -142,6 +149,7 @@ export const Home = () => {
             <input {...register('front')} />
             <input {...register('back')} />
             <select {...register('deck')}>
+              <option>------</option>
               {decks.map((deck) => {
                 return (
                   <option>

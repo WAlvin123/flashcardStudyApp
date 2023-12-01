@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { MultipleChoice } from './pages/MultipleChoice';
 import { ShortAnswer } from './pages/ShortAnswer';
 import { Matching } from './pages/Matching';
+import { Import } from './pages/Import';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path='matching' element={<Matching/>}/>
           <Route path='/multiplechoice' element={<MultipleChoice/>}/>
           <Route path='/shortanswer' element={<ShortAnswer/>}/>
+          <Route path='/importdeck' element={<Import/>}/>
         </Routes>
       </Router>
     </div>
