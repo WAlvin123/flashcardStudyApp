@@ -15,6 +15,8 @@ export const Matching = () => {
   const [wrong, setWrong] = useState(false)
   const [answerMessage, setAnswerMessage] = useState('')
   const [score, setScore] = useState(0)
+  const [selectedOption, setSelectedOption] = useState('------')
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -29,7 +31,7 @@ export const Matching = () => {
   }
 
   const submissionSchema = yup.object().shape({
-    studyAmount: yup.number().required().min(0)
+    studyAmount: yup.number().required().min(0),
   })
 
   const { register, handleSubmit } = useForm({
@@ -38,7 +40,7 @@ export const Matching = () => {
 
   const onSubmit = (submission) => {
     const smallerArray = []
-    if (filteredDeck.cards !== undefined) {
+    if (selectedOption !== '------') {
       if (submission.studyAmount - 1 < filteredDeck.cards.length) {
         while (smallerArray.length < submission.studyAmount) {
           const random = Math.floor(Math.random() * filteredDeck.cards.length)
@@ -52,6 +54,7 @@ export const Matching = () => {
       newArray.sort(() => Math.random() - 0.5)
       setColumnTwo([...newArray].map((item) => { return { ...item, column: 2 } }))
       setModalState(true)
+      setTotal(submission.studyAmount)
     }
   }
 
@@ -107,59 +110,77 @@ export const Matching = () => {
     setScore(0)
     setModalState(false)
     setAnswerMessage('')
+    setChoiceOne('')
+    setChoiceTwo('')
   }
 
   return (
     <div>
-      {(modalState == true && columnOne.length !== 0) && (
+      {modalState == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            <div className='decks-table' style={{ display: 'flex', justifyContent: "center" }}>
-              <table style={{ backgroundColor: "black", color: 'white' }}>
-                <th width='200px'>Front</th>
-                <th width='200px'>Back</th>
-                <tr style={{ backgroundColor: 'white' }}>
-                  <td style={{ color: "black" }}>{choiceOne.front}</td>
-                  <td style={{ color: "black" }}>{choiceTwo.back}</td>
-                </tr>
-              </table>
-            </div>
-            <h2>{answerMessage}</h2>
-            <h2>Score: {score}</h2>
-            <div class='column-container'>
+            {columnOne.length !== 0 && (
               <div>
-                {columnOne.map((card) => {
-                  return (
-                    <div>
-                      <button onClick={() => { handleChoice(card, card.column) }}>
-                        {card.front}
-                      </button>
-                    </div>
-                  )
-                })}
+                <div className='decks-table' style={{ display: 'flex', justifyContent: "center" }}>
+                  <table style={{ backgroundColor: "black", color: 'white' }}>
+                    <th width='200px'>Front</th>
+                    <th width='200px'>Back</th>
+                    <tr style={{ backgroundColor: 'white' }}>
+                      <td style={{ color: "black" }}>{choiceOne.front}</td>
+                      <td style={{ color: "black" }}>{choiceTwo.back}</td>
+                    </tr>
+                  </table>
+                  <button onClick={handleCheckAnswer}>Check Answer</button>
+
+                </div>
+                <h2>{answerMessage}</h2>
+                <h2>Score: {score}</h2>
+                <div class='column-container'>
+                  <div>
+                    {columnOne.map((card) => {
+                      return (
+                        <div>
+                          <button onClick={() => { handleChoice(card, card.column) }}>
+                            {card.front}
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div>
+                    {columnTwo.map((card) => {
+                      return (
+                        <div>
+                          <button onClick={() => { handleChoice(card, card.column) }}>
+                            {card.back}
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+                <h2></h2>
+                <button onClick={handleFinishStudy}>Finish studying</button>
               </div>
+            )}
+
+            {columnOne.length == 0 && (
               <div>
-                {columnTwo.map((card) => {
-                  return (
-                    <div>
-                      <button onClick={() => { handleChoice(card, card.column) }}>
-                        {card.back}
-                      </button>
-                    </div>
-                  )
-                })}
+                <h2>You scored {score} / {total}</h2>
+                <button onClick={handleFinishStudy}>Finish studying</button>
               </div>
-            </div>
-            <h2></h2>
-            <button onClick={handleCheckAnswer}>Check Answer</button>
-            <button onClick={handleFinishStudy}>Finish studying</button>
+            )}
           </div>
         </div>
       )}
 
       <div class='study-options'>
         <h2>Select the deck you would like to study from</h2>
-        <select onChange={(event) => { handleSelect(event.target.value) }}>
+        <p>Guide: Match the front with the correct opposite side of the card</p>
+        <select onChange={(event) => {
+          handleSelect(event.target.value)
+          setSelectedOption(event.target.value)
+        }}>
           <option>------</option>
           {decks.map((decks) => {
             return (
@@ -169,6 +190,7 @@ export const Matching = () => {
             )
           })}
         </select>
+        {selectedOption !== "------" && <p>Selected deck contains: {filteredDeck.cards.length} cards</p>}
         <div>
           <h2>Input the amount of cards you would like to study</h2>
           <div>

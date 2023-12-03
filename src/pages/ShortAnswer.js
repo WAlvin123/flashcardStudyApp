@@ -1,5 +1,5 @@
 import { useDeckState } from "../components/useDeckState"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from 'yup'
 import { useForm } from "react-hook-form"
@@ -11,6 +11,10 @@ export const ShortAnswer = () => {
   const [filteredDeck, setFilteredDeck] = useState([])
   const [userInput, setUserInput] = useState('')
   const [showAnswer, setShowAnswer] = useState(false)
+  const [selectedOption, setSelectedOption] = useState('------')
+  const [score, setScore] = useState(0)
+  const [wrong, setWrong] = useState(false)
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -25,7 +29,8 @@ export const ShortAnswer = () => {
   }
 
   const submissionSchema = yup.object().shape({
-    studyAmount: yup.number().required().min(0)
+    studyAmount: yup.number().required().min(0),
+    studySide: yup.string().required()
   })
 
   const { register, handleSubmit } = useForm({
@@ -34,7 +39,7 @@ export const ShortAnswer = () => {
 
   const onSubmit = (submission) => {
     const smallerArray = []
-    if (filteredDeck.cards !== undefined) {
+    if (selectedOption !== '------' && studySide !== '------') {
       if (submission.studyAmount - 1 < filteredDeck.cards.length) {
         while (smallerArray.length < submission.studyAmount) {
           const random = Math.floor(Math.random() * filteredDeck.cards.length)
@@ -43,64 +48,118 @@ export const ShortAnswer = () => {
           }
         }
       }
+      setStudySide(submission.studySide)
       setRandomCards(smallerArray)
+      setTotal(submission.studyAmount)
     }
   }
 
   const checkAnswer = () => {
     if (studySide == 'front') {
-      if (userInput == randomCards[0].back) {
+      if (userInput == randomCards[0].back && wrong == false) {
         setRandomCards(randomCards.filter((card) => { return card.back !== userInput }))
+        setScore(score + 1)
+        setShowAnswer(false)
+      } else if (userInput == randomCards[0].back && wrong == true) {
+        setRandomCards(randomCards.filter((card) => { return card.back !== userInput }))
+        setWrong(false)
+        setShowAnswer(false)
+      } else if (userInput !== randomCards[0].back) {
+        setWrong(true)
+        setShowAnswer(false)
       }
-    } else {
+    } else if (userInput == randomCards[0].front && wrong == false) {
       setRandomCards(randomCards.filter((card) => { return card.front !== userInput }))
+      setScore(score + 1)
+      setShowAnswer(false)
+    } else if (userInput == randomCards[0].front && wrong == true) {
+      setRandomCards(randomCards.filter((card) => { return card.front !== userInput }))
+      setWrong(false)
+      setShowAnswer(false)
+    } else if (userInput !== randomCards[0].front) {
+      setWrong(true)
+      setShowAnswer(false)
     }
+  }
+
+  const handleFinishStudy = () => {
+    setScore(0)
+    setStudySide('')
   }
 
   return (
 
     <div>
-      {(studySide == 'front' && randomCards.length !== 0) && (
+      {studySide == 'front' && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            <div>
-              <input onChange={(event) => { setUserInput(event.target.value) }} />
-              <button onClick={checkAnswer}>Check answer</button>
-            </div>
-            <h2>
-              {randomCards[0].front}<button onClick={() => {
-                setShowAnswer(!showAnswer)
-              }}>Show Answer</button>
-            </h2>
-            {showAnswer && randomCards[0].back}
-            <p></p>
-            <button onClick={() => { setStudySide('') }}>Finish studying</button>
+
+            {randomCards.length !== 0 && (
+              <div>
+                <div>
+                  <input onChange={(event) => { setUserInput(event.target.value) }} />
+                  <button onClick={checkAnswer}>Check answer</button>
+                </div>
+                <h2>
+                  {randomCards[0].front}<button onClick={() => {
+                    setShowAnswer(!showAnswer)
+                    setWrong(true)
+                  }}>Show Answer</button>
+                </h2>
+                {showAnswer && randomCards[0].back}
+                <p></p>
+                <h2>Current score: {score}</h2>
+                <button onClick={handleFinishStudy}>Finish studying</button>
+              </div>
+            )}
+
+            {randomCards.length == 0 && (
+              <div>
+                <h2>You scored {score} / {total}</h2>
+                <button onClick={handleFinishStudy}>Finish studying</button>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {(studySide == 'back' && randomCards.length !== 0) && (
+      {(studySide == 'back') && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            <div>
-              <input onChange={(event) => { setUserInput(event.target.value) }} />
-              <button onClick={checkAnswer}>Check answer</button>
-            </div>
-            <h2>
-              {randomCards[0].back} <button onClick={() => {
-                setShowAnswer(!showAnswer)
-              }}>Show Answer</button> {showAnswer && randomCards[0].front}
-            </h2>
-            {showAnswer && randomCards[0].back}
-            <p></p>
-            <button onClick={() => { setStudySide('') }}>Finish studying</button>
+            {randomCards.length !== 0 && (
+              <div>
+                <div>
+                  <input onChange={(event) => { setUserInput(event.target.value) }} />
+                  <button onClick={checkAnswer}>Check answer</button>
+                </div>
+                <h2>
+                  {randomCards[0].back} <button onClick={() => {
+                    setShowAnswer(!showAnswer)
+                  }}>Show Answer</button> {showAnswer && randomCards[0].front}
+                </h2>
+                {showAnswer && randomCards[0].back}
+                <p></p>
+                <h2>Current score: {score}</h2>
+                <button onClick={handleFinishStudy}>Finish studying</button>
+              </div>)}
+
+            {randomCards.length == 0 && (
+              <div>
+                <h2>You scored {score} / {total}</h2>
+                <button onClick={handleFinishStudy}>Finish studying</button>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       <div class='study-options'>
         <h2>Select the deck you would like to study from</h2>
-        <select onChange={(event) => { handleSelect(event.target.value) }}>
+        <p>Guide: Enter the corresponding side of the card</p>
+        <select onChange={(event) => {
+          handleSelect(event.target.value)
+          setSelectedOption(event.target.value)
+        }}>
           <option>------</option>
           {decks.map((decks) => {
             return (
@@ -110,16 +169,21 @@ export const ShortAnswer = () => {
             )
           })}
         </select>
+        {selectedOption !== "------" && <p>Selected deck contains: {filteredDeck.cards.length} cards</p>}
         <div>
-          <h2>Input the amount of cards you would like to study</h2>
+          <h2>Input the amount of cards would like to study, and <br />
+            select what side you would like the question prompt to be</h2>
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
               <input {...register('studyAmount')} />
+              <select {...register('studySide')}>
+                <option>------</option>
+                <option>front</option>
+                <option>back</option>
+              </select>
               <input type='submit' />
             </form>
           </div>
-          <button onClick={() => { setStudySide('front') }}>Front</button>
-          <button onClick={() => { setStudySide('back') }}>Back</button>
         </div>
       </div>
     </div>

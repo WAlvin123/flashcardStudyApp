@@ -121,8 +121,10 @@ export const Home = () => {
       <div class='container'>
         <div class='decks'>
           <h2>Create Deck</h2>
+          <div>
           <input onChange={(event) => { setInputValue(event.target.value) }} />
           <button onClick={createDeck}>Create</button>
+          </div>
           <h2>View Deck</h2>
           <table class='view-deck' style={{ backgroundColor: 'black' }}>
             <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
