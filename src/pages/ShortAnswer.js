@@ -74,10 +74,12 @@ export const ShortAnswer = () => {
       setRandomCards(randomCards.filter((card) => { return card.front !== userInput }))
       setScore(score + 1)
       setShowAnswer(false)
+      setUserInput('')
     } else if (userInput == randomCards[0].front && wrong == true) {
       setRandomCards(randomCards.filter((card) => { return card.front !== userInput }))
       setWrong(false)
       setShowAnswer(false)
+      setUserInput('')
     } else if (userInput !== randomCards[0].front) {
       setWrong(true)
       setShowAnswer(false)
@@ -87,6 +89,7 @@ export const ShortAnswer = () => {
   const handleFinishStudy = () => {
     setScore(0)
     setStudySide('')
+    setUserInput('')
   }
 
   return (
