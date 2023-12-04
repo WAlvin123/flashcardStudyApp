@@ -19,6 +19,11 @@ export const Home = () => {
   const [filteredDeck, setFilteredDeck] = useState([])
   const [filteredDeckIndex, setFilteredDeckIndex] = useState(0)
   const [isItemsVisible, setIsItemsVisible] = useState(false)
+  const [formState, setFormState] = useState({
+    front:'',
+    back:''
+  })
+  const [deckInput, setDeckInput] = useState('')
 
 
   const createDeck = () => {
@@ -34,6 +39,7 @@ export const Home = () => {
       const updatedDecks = [...decks, newDeck]
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
       setDecks(updatedDecks)
+      setInputValue('')
     }
   }
 
@@ -80,6 +86,7 @@ export const Home = () => {
               return deck
             }
           })
+          setFormState({...formState, front:'', back:''})
           localStorage.setItem('decks', JSON.stringify(updatedDecks))
           return updatedDecks
         })
@@ -109,7 +116,6 @@ export const Home = () => {
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
       return updatedDecks
     })
-
   };
 
   return (
@@ -122,11 +128,11 @@ export const Home = () => {
         <div class='decks'>
           <h2>Create Deck</h2>
           <div>
-          <input onChange={(event) => { setInputValue(event.target.value) }} />
+          <input onChange={(event) => { setInputValue(event.target.value) }} value={inputValue}/>
           <button onClick={createDeck}>Create</button>
           </div>
           <h2>View Deck</h2>
-          <table class='view-deck' style={{ backgroundColor: 'black' }}>
+          <table class='view-deck' style={{ backgroundColor: 'black'}}>
             <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
             <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Amount of Cards</th>
 
@@ -148,8 +154,10 @@ export const Home = () => {
             Create card
           </h2>
           <form onSubmit={handleSubmit(createCard)}>
-            <input {...register('front')} />
-            <input {...register('back')} />
+            <input {...register('front')} value={formState.front} 
+            onChange={(event) => {setFormState({...formState, front: event.target.value})}}/>
+            <input {...register('back')} value={formState.back}
+             onChange={(event) => {setFormState({...formState, back: event.target.value})}} />
             <select {...register('deck')}>
               <option>------</option>
               {decks.map((deck) => {
@@ -185,6 +193,7 @@ export const Home = () => {
               )
             })}
           </select>
+          <p></p>
           {isItemsVisible && (
             <table style={{ backgroundColor: "black" }}>
               <th style={{ backgroundColor: "black", color: "white" }}>Front</th>

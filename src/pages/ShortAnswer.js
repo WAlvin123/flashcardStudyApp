@@ -60,10 +60,12 @@ export const ShortAnswer = () => {
         setRandomCards(randomCards.filter((card) => { return card.back !== userInput }))
         setScore(score + 1)
         setShowAnswer(false)
+        setUserInput('')
       } else if (userInput == randomCards[0].back && wrong == true) {
         setRandomCards(randomCards.filter((card) => { return card.back !== userInput }))
         setWrong(false)
         setShowAnswer(false)
+        setUserInput('')
       } else if (userInput !== randomCards[0].back) {
         setWrong(true)
         setShowAnswer(false)
@@ -97,7 +99,7 @@ export const ShortAnswer = () => {
             {randomCards.length !== 0 && (
               <div>
                 <div>
-                  <input onChange={(event) => { setUserInput(event.target.value) }} />
+                  <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput}/>
                   <button onClick={checkAnswer}>Check answer</button>
                 </div>
                 <h2>
@@ -129,7 +131,7 @@ export const ShortAnswer = () => {
             {randomCards.length !== 0 && (
               <div>
                 <div>
-                  <input onChange={(event) => { setUserInput(event.target.value) }} />
+                  <input onChange={(event) => { setUserInput(event.target.value)}} value={userInput}/>
                   <button onClick={checkAnswer}>Check answer</button>
                 </div>
                 <h2>
