@@ -47,10 +47,10 @@ export const ShortAnswer = () => {
             smallerArray.push(filteredDeck.cards[random])
           }
         }
+        setStudySide(submission.studySide)
+        setRandomCards(smallerArray)
+        setTotal(submission.studyAmount)
       }
-      setStudySide(submission.studySide)
-      setRandomCards(smallerArray)
-      setTotal(submission.studyAmount)
     }
   }
 
@@ -102,7 +102,7 @@ export const ShortAnswer = () => {
             {randomCards.length !== 0 && (
               <div>
                 <div>
-                  <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput}/>
+                  <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput} />
                   <button onClick={checkAnswer}>Check answer</button>
                 </div>
                 <h2>
@@ -134,7 +134,7 @@ export const ShortAnswer = () => {
             {randomCards.length !== 0 && (
               <div>
                 <div>
-                  <input onChange={(event) => { setUserInput(event.target.value)}} value={userInput}/>
+                  <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput} />
                   <button onClick={checkAnswer}>Check answer</button>
                 </div>
                 <h2>

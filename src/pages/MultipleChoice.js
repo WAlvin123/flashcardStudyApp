@@ -49,11 +49,11 @@ export const MultipleChoice = () => {
             smallerArray.push(filteredDeck.cards[random])
           }
         }
+        setTotal(submission.studyAmount)
+        setStudySide(submission.studySide)
+        setRandomCards(smallerArray)
+        handleMC(smallerArray[0])
       }
-      setTotal(submission.studyAmount)
-      setStudySide(submission.studySide)
-      setRandomCards(smallerArray)
-      handleMC(smallerArray[0])
     }
   }
 

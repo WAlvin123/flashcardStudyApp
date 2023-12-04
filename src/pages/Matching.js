@@ -48,13 +48,13 @@ export const Matching = () => {
             smallerArray.push(filteredDeck.cards[random])
           }
         }
+        setColumnOne([...smallerArray].map((item) => { return { ...item, column: 1 } }))
+        const newArray = [...smallerArray]
+        newArray.sort(() => Math.random() - 0.5)
+        setColumnTwo([...newArray].map((item) => { return { ...item, column: 2 } }))
+        setModalState(true)
+        setTotal(submission.studyAmount)
       }
-      setColumnOne([...smallerArray].map((item) => { return { ...item, column: 1 } }))
-      const newArray = [...smallerArray]
-      newArray.sort(() => Math.random() - 0.5)
-      setColumnTwo([...newArray].map((item) => { return { ...item, column: 2 } }))
-      setModalState(true)
-      setTotal(submission.studyAmount)
     }
   }
 
