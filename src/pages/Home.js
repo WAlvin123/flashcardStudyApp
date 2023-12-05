@@ -20,10 +20,13 @@ export const Home = () => {
   const [filteredDeckIndex, setFilteredDeckIndex] = useState(0)
   const [isItemsVisible, setIsItemsVisible] = useState(false)
   const [formState, setFormState] = useState({
-    front:'',
-    back:''
+    front: '',
+    back: ''
   })
-  const [deckInput, setDeckInput] = useState('')
+  const [editVisible, setEditVisible] = useState(false)
+  const [editCard, setEditCard] = useState({})
+  const [editFront, setEditFront] = useState('')
+  const [editBack, setEditBack] = useState('')
 
 
   const createDeck = () => {
@@ -44,11 +47,14 @@ export const Home = () => {
   }
 
   const removeDeck = (id) => {
-    setDecks(prevDecks => {
-      const updatedDecks = prevDecks.filter(decks => decks.id !== id);
-      localStorage.setItem('decks', JSON.stringify(updatedDecks));
-      return updatedDecks;
-    });
+    if (isItemsVisible == false) {
+      setDecks(prevDecks => {
+        const updatedDecks = prevDecks.filter(decks => decks.id !== id);
+        localStorage.setItem('decks', JSON.stringify(updatedDecks));
+        return updatedDecks;
+      });
+    }
+
   };
 
   const cardSchema = yup.object().shape({
@@ -75,6 +81,7 @@ export const Home = () => {
         const newCard = {
           front: submission.front,
           back: submission.back,
+          deck: submission.deck,
           id: selectedDeck.cards.length == 0 || selectedDeck.cards[selectedDeck.cards.length - 1].id + 1
         }
         setDecks(prevDecks => {
@@ -86,7 +93,7 @@ export const Home = () => {
               return deck
             }
           })
-          setFormState({...formState, front:'', back:''})
+          setFormState({ ...formState, front: '', back: '' })
           localStorage.setItem('decks', JSON.stringify(updatedDecks))
           return updatedDecks
         })
@@ -118,47 +125,104 @@ export const Home = () => {
     })
   };
 
+  const completeEdit = () => {
+    setDecks(previousDecks => {
+      const updatedDecks = previousDecks.map(deck => {
+        if (deck.name == editCard.deck) {
+          const updatedCards = deck.cards.map(card => {
+            if (card.id == editCard.id) {
+              return { ...card, front: editFront, back: editBack }
+            } else return card
+          })
+          return { ...deck, cards: updatedCards }
+        } else return deck
+      })
+      setEditVisible(false)
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+      return updatedDecks
+    })
+  }
+
+
+
   return (
     <div>
-      <h2>Home</h2>
-      <p>A simple flashcard study application where you can choose between <br />
-        multiple choice, matching the two sides of the card, and short answer.
-      </p>
-      <div class='container'>
-        <div class='decks'>
-          <h2>Create Deck</h2>
-          <div>
-          <input onChange={(event) => { setInputValue(event.target.value) }} value={inputValue}/>
-          <button onClick={createDeck}>Create</button>
+      {editVisible == true && (
+        <div class='modalBackground'>
+          <div class='modalContainer'>
+            <p>Front: {editCard.front} | Back: {editCard.back} | Deck: {editCard.deck} | ID: {editCard.id}</p>
+            <input placeholder="New front..." onChange={(event) => { setEditFront(event.target.value) }} />
+            <input placeholder="New back..." onChange={(event) => { setEditBack(event.target.value) }} />
+            <button onClick={completeEdit}>Submit edits</button>
           </div>
-          <h2>View Deck</h2>
-          <table class='view-deck' style={{ backgroundColor: 'black'}}>
-            <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
-            <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Amount of Cards</th>
-
-            {decks.map((deck) => {
-              return (
-                <tr>
-                  <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
-                  <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
-                  <button onClick={
-                    () => { removeDeck(deck.id) }
-                  }>Remove Deck</button>
-                </tr>
-              )
-            })}
-          </table>
         </div>
-        <div class='cards'>
-          <h2>
-            Create card
-          </h2>
-          <form onSubmit={handleSubmit(createCard)}>
-            <input {...register('front')} value={formState.front} 
-            onChange={(event) => {setFormState({...formState, front: event.target.value})}}/>
-            <input {...register('back')} value={formState.back}
-             onChange={(event) => {setFormState({...formState, back: event.target.value})}} />
-            <select {...register('deck')}>
+      )}
+
+      <div>
+        <h2>Home</h2>
+        <p>A simple flashcard study application where you can choose between <br />
+          multiple choice, matching the two sides of the card, and short answer.
+        </p>
+        <div class='container'>
+          <div class='decks'>
+            <h2>Create Deck</h2>
+            <div>
+              <input onChange={(event) => { setInputValue(event.target.value) }} value={inputValue} />
+              <button onClick={createDeck}>Create</button>
+            </div>
+            <h2>View Deck</h2>
+            <table class='view-deck' style={{ backgroundColor: 'black' }}>
+              <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
+              <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Amount of Cards</th>
+
+              {decks.map((deck) => {
+                return (
+                  <tr>
+                    <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
+                    <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
+                    <button onClick={
+                      () => { removeDeck(deck.id) }
+                    }>Remove Deck</button>
+                  </tr>
+                )
+              })}
+            </table>
+          </div>
+          <div class='cards'>
+            <h2>
+              Create card
+            </h2>
+            <form onSubmit={handleSubmit(createCard)}>
+              <input {...register('front')} value={formState.front}
+                onChange={(event) => { setFormState({ ...formState, front: event.target.value }) }} />
+              <input {...register('back')} value={formState.back}
+                onChange={(event) => { setFormState({ ...formState, back: event.target.value }) }} />
+              <select {...register('deck')}>
+                <option>------</option>
+                {decks.map((deck) => {
+                  return (
+                    <option>
+                      {deck.name}
+                    </option>
+                  )
+                })}
+              </select>
+              <input type="submit" />
+            </form>
+
+            <h2>
+              View card
+            </h2>
+            <select onChange={(event => {
+              if (event.target.value !== '------') {
+                handleChange(event.target.value)
+                setIsItemsVisible(true)
+                console.log(filteredDeck)
+              } else {
+                setIsItemsVisible(false)
+              }
+            }
+            )}>
               <option>------</option>
               {decks.map((deck) => {
                 return (
@@ -168,47 +232,31 @@ export const Home = () => {
                 )
               })}
             </select>
-            <input type="submit" />
-          </form>
-
-          <h2>
-            View card
-          </h2>
-          <select onChange={(event => {
-            if (event.target.value !== '------') {
-              handleChange(event.target.value)
-              setIsItemsVisible(true)
-              console.log(filteredDeck)
-            } else {
-              setIsItemsVisible(false)
-            }
-          }
-          )}>
-            <option>------</option>
-            {decks.map((deck) => {
-              return (
-                <option>
-                  {deck.name}
-                </option>
-              )
-            })}
-          </select>
-          <p></p>
-          {isItemsVisible && (
-            <table style={{ backgroundColor: "black" }}>
-              <th style={{ backgroundColor: "black", color: "white" }}>Front</th>
-              <th style={{ backgroundColor: "black", color: "white" }}>Back</th>
-              {decks[filteredDeckIndex].cards.map((card) => {
-                return (
-                  <tr style={{ backgroundColor: "white" }}>
-                    <td>{card.front}</td>
-                    <td>{card.back}</td>
-                    <button onClick={() => { removeCard(card.id) }}>Remove Card</button>
-                  </tr>
-                )
-              })}
-            </table>
-          )}
+            <p></p>
+            {isItemsVisible && (
+              <table style={{ backgroundColor: "black" }}>
+                <thead>
+                  <th style={{ backgroundColor: "black", color: "white" }}>Front</th>
+                  <th style={{ backgroundColor: "black", color: "white" }}>Back</th>
+                </thead>
+                <tbody>
+                  {decks[filteredDeckIndex].cards.map((card) => {
+                    return (
+                      <tr style={{ backgroundColor: "white" }}>
+                        <td>{card.front}</td>
+                        <td>{card.back}</td>
+                        <button onClick={() => { removeCard(card.id) }}>Remove Card</button>
+                        <button onClick={() => {
+                          setEditVisible(true)
+                          setEditCard(card)
+                        }}>Edit Card</button>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </div>
     </div>
