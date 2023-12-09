@@ -126,24 +126,22 @@ export const Home = () => {
   };
 
   const completeEdit = () => {
-    setDecks(previousDecks => {
-      const updatedDecks = previousDecks.map(deck => {
+    setDecks(prevDecks => {
+      const updatedDecks = prevDecks.map(deck => {
         if (deck.name == editCard.deck) {
           const updatedCards = deck.cards.map(card => {
             if (card.id == editCard.id) {
               return { ...card, front: editFront, back: editBack }
-            } else return card
+            } return card
           })
           return { ...deck, cards: updatedCards }
-        } else return deck
+        } return deck
       })
-      setEditVisible(false)
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
+      setEditVisible(false)
       return updatedDecks
     })
   }
-
-
 
   return (
     <div>

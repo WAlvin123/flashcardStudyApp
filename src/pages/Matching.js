@@ -8,7 +8,7 @@ export const Matching = () => {
   const [decks, setDecks] = useDeckState()
   const [columnOne, setColumnOne] = useState()
   const [columnTwo, setColumnTwo] = useState()
-  const [filteredDeck, setFilteredDeck] = useState({})
+  const [filteredDeck, setFilteredDeck] = useState({ cards: ['initial state'] })
   const [modalState, setModalState] = useState(false)
   const [choiceOne, setChoiceOne] = useState('')
   const [choiceTwo, setChoiceTwo] = useState('')
@@ -17,6 +17,7 @@ export const Matching = () => {
   const [score, setScore] = useState(0)
   const [selectedOption, setSelectedOption] = useState('------')
   const [total, setTotal] = useState(0)
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -26,15 +27,26 @@ export const Matching = () => {
   }, [])
 
   const handleSelect = (deckname) => {
-    const selectedDeck = decks.find(deck => deckname === deck.name)
-    setFilteredDeck(selectedDeck)
+    if (deckname === "------") {
+      setFilteredDeck({ cards: ['initial'] })
+      setSelectedOption('------')
+    } else {
+      const selectedDeck = decks.find(deck => deckname === deck.name)
+      setFilteredDeck(selectedDeck)
+      setSelectedOption(deckname)
+    }
   }
 
   const submissionSchema = yup.object().shape({
-    studyAmount: yup.number().required().min(0),
+    studyAmount: yup
+      .number("Please enter a number")
+      .typeError("Please enter a number")
+      .required("Please enter something")
+      .min(0, "Please enter a number >0")
+      .max(filteredDeck.cards.length, "The input surpasses the amount of cards in the deck"),
   })
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, formState: {errors} } = useForm({
     resolver: yupResolver(submissionSchema)
   })
 
@@ -54,7 +66,7 @@ export const Matching = () => {
         setColumnTwo([...newArray].map((item) => { return { ...item, column: 2 } }))
         setModalState(true)
         setTotal(submission.studyAmount)
-      }
+      } else setErrorMessage('Input surpasses the amount of cards in the deck')
     }
   }
 
@@ -112,6 +124,7 @@ export const Matching = () => {
     setAnswerMessage('')
     setChoiceOne('')
     setChoiceTwo('')
+    setAnswerMessage('')
   }
 
   return (
@@ -179,7 +192,6 @@ export const Matching = () => {
         <p>Guide: Match the front with the correct opposite side of the card</p>
         <select onChange={(event) => {
           handleSelect(event.target.value)
-          setSelectedOption(event.target.value)
         }}>
           <option>------</option>
           {decks.map((decks) => {
@@ -195,9 +207,12 @@ export const Matching = () => {
           <h2>Input the amount of cards you would like to study</h2>
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <input {...register('studyAmount')} />
+              <input {...register('studyAmount')} onChange={() => { setErrorMessage('') }} />
               <input type='submit' />
             </form>
+            <p>
+              {errors.studyAmount?.message}
+            </p>
           </div>
         </div>
       </div>

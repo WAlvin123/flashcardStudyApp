@@ -8,7 +8,7 @@ export const ShortAnswer = () => {
   const [decks, setDecks] = useDeckState()
   const [studySide, setStudySide] = useState('')
   const [randomCards, setRandomCards] = useState([])
-  const [filteredDeck, setFilteredDeck] = useState([])
+  const [filteredDeck, setFilteredDeck] = useState({cards: ['initial state']})
   const [userInput, setUserInput] = useState('')
   const [showAnswer, setShowAnswer] = useState(false)
   const [selectedOption, setSelectedOption] = useState('------')
@@ -24,16 +24,27 @@ export const ShortAnswer = () => {
   }, [])
 
   const handleSelect = (deckname) => {
+    if (deckname === "------") {
+      setFilteredDeck({cards:['initial']})
+      setSelectedOption('------')
+    } else { 
     const selectedDeck = decks.find(deck => deckname === deck.name)
     setFilteredDeck(selectedDeck)
+    setSelectedOption(deckname)
+    }
   }
 
   const submissionSchema = yup.object().shape({
-    studyAmount: yup.number().required().min(0),
+    studyAmount: yup
+    .number("Please enter a number")
+    .typeError("Please enter a number")
+    .required("Please enter something")
+    .min(0, "Please enter a number >0")
+    .max(filteredDeck.cards.length, "The input surpasses the amount of cards in the deck"),
     studySide: yup.string().required()
   })
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, formState: {errors} } = useForm({
     resolver: yupResolver(submissionSchema)
   })
 
@@ -188,6 +199,7 @@ export const ShortAnswer = () => {
               </select>
               <input type='submit' />
             </form>
+            <p>{errors.studyAmount?.message}</p>
           </div>
         </div>
       </div>

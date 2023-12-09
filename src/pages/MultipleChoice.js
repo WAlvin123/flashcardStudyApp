@@ -7,7 +7,7 @@ import "./Modal.css"
 
 export const MultipleChoice = () => {
   const [decks, setDecks] = useDeckState()
-  const [filteredDeck, setFilteredDeck] = useState({})
+  const [filteredDeck, setFilteredDeck] = useState({cards: ['initial state']})
   const [randomCards, setRandomCards] = useState([])
   const [multipleChoice, setMultipleChoice] = useState([])
   const [studySide, setStudySide] = useState('')
@@ -26,16 +26,27 @@ export const MultipleChoice = () => {
   }, [])
 
   const handleSelect = (deckname) => {
+    if (deckname === "------") {
+      setFilteredDeck({cards:['initial']})
+      setSelectedOption('------')
+    } else { 
     const selectedDeck = decks.find(deck => deckname === deck.name)
     setFilteredDeck(selectedDeck)
+    setSelectedOption(deckname)
+    }
   }
 
   const submissionSchema = yup.object().shape({
-    studyAmount: yup.number().required().min(0),
+    studyAmount: yup
+    .number("Please enter a number")
+    .typeError("Please enter a number")
+    .required("Please enter something")
+    .min(0, "Please enter a number >0")
+    .max(filteredDeck.cards.length, "The input surpasses the amount of cards in the deck"),
     studySide: yup.string().required()
   })
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, formState: {errors}} = useForm({
     resolver: yupResolver(submissionSchema)
   })
 
@@ -216,6 +227,7 @@ export const MultipleChoice = () => {
                 <option>back</option>
               </select>
               <input type='submit' />
+              <p>{errors.studyAmount?.message}</p>
             </form>
           </div>
         </div>
