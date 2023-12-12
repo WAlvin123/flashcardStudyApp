@@ -23,11 +23,13 @@ export const Home = () => {
     front: '',
     back: ''
   })
-  const [editVisible, setEditVisible] = useState(false)
+  const [editCardsVisible, setEditCardsVisible] = useState(false)
+  const [editDecksVisible, setEditDecksVisible] = useState(false)
   const [editCard, setEditCard] = useState({})
+  const [editDeck, setEditDeck] = useState({})
   const [editFront, setEditFront] = useState('')
   const [editBack, setEditBack] = useState('')
-
+  const [editDeckName, setEditDeckName] = useState('')
 
   const createDeck = () => {
     if (decks.some(deck => deck.name == inputValue)) {
@@ -125,6 +127,19 @@ export const Home = () => {
     })
   };
 
+  const completeEditDeck = () => {
+    setDecks(prevDecks => {
+      const updatedDecks = prevDecks.map(deck => {
+        if (deck.id == editDeck.id) {
+          return {...deck, name: editDeckName}
+        } else return deck
+      })
+      setEditDecksVisible(false)
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+      return updatedDecks
+    })
+  }
+
   const completeEdit = () => {
     setDecks(prevDecks => {
       const updatedDecks = prevDecks.map(deck => {
@@ -132,20 +147,30 @@ export const Home = () => {
           const updatedCards = deck.cards.map(card => {
             if (card.id == editCard.id) {
               return { ...card, front: editFront, back: editBack }
-            } return card
+            } else return card
           })
           return { ...deck, cards: updatedCards }
-        } return deck
+        } else return deck
       })
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
-      setEditVisible(false)
+      setEditCardsVisible(false)
       return updatedDecks
     })
   }
 
   return (
     <div>
-      {editVisible == true && (
+      {editDecksVisible == true && (
+        <div class='modalBackground'>
+          <div class='modalContainer'>
+            <p>{editDeck.name}</p>
+            <input placeholder="New deck name..." onChange={(event) => setEditDeckName(event.target.value)}/>
+            <button onClick={completeEditDeck}>Submit edit</button>
+          </div>
+        </div>
+      )}
+
+      {editCardsVisible == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
             <p>Front: {editCard.front} | Back: {editCard.back} | Deck: {editCard.deck} | ID: {editCard.id}</p>
@@ -178,9 +203,14 @@ export const Home = () => {
                   <tr>
                     <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
                     <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
+                    <td style={{ backgroundColor: 'white' }}>ID: {deck.id}     </td>
                     <button onClick={
                       () => { removeDeck(deck.id) }
                     }>Remove Deck</button>
+                    <button onClick={() => {
+                      setEditDecksVisible(true)
+                      setEditDeck(deck)
+                      }}>Edit Deck</button>
                   </tr>
                 )
               })}
@@ -245,7 +275,7 @@ export const Home = () => {
                         <td>{card.back}</td>
                         <button onClick={() => { removeCard(card.id) }}>Remove Card</button>
                         <button onClick={() => {
-                          setEditVisible(true)
+                          setEditCardsVisible(true)
                           setEditCard(card)
                         }}>Edit Card</button>
                       </tr>

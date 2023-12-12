@@ -2,10 +2,13 @@ import { saveAs } from "file-saver"
 import { useDeckState } from "../components/useDeckState"
 import { useEffect, useState } from "react"
 
+// TODO: Append decks rather than overwrite all decks.
+
 export const Import = () => {
   const [decks, setDecks] = useDeckState()
   const [loadCompleteMessage, setLoadCompleteMessage] = useState("")
   const [deckName, setDeckName] = useState('')
+  const [loadedDeck, setLoadedDeck] = useState([])
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -25,7 +28,17 @@ export const Import = () => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      localStorage.setItem('decks', e.target.result)
+      const loadedFileObject = JSON.parse(e.target.result)
+      const localStorageObject = localStorage.getItem('decks') ? JSON.parse(localStorage.getItem('decks')) : [];
+      let newID = localStorageObject.length + 1
+
+      const newDecks = loadedFileObject.map(deck => {
+        newID++
+        return {...deck, name:`${deck.name} [IMPORTED]`, id: newID}
+      })
+      const updatedDecks = [...localStorageObject, ...newDecks]
+      setLoadedDeck(updatedDecks)
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
       setLoadCompleteMessage("The decks have been successfully loaded")
     }
     reader.readAsText(file)
@@ -35,8 +48,14 @@ export const Import = () => {
     <div style={{display:'grid', gridTemplateColumns:'1fr 1fr'}}>
       <div>
       <h2 style={{paddingTop:'20px'}}>Import deck through txt</h2>
-      <h3>Warning: When you load a set of decks, your original decks will be overwritten</h3>
+      <h3>Note: Decks with the same name will not be loaded</h3>
       <input type='file' accept='.txt' onChange={handleFileChange}/>
+      <h2>---------------------------------</h2>
+      <div>
+        {loadedDeck.map((deck) => {
+          return <div>{deck.name} | {deck.cards.length} cards</div>
+        })}
+      </div>
       <h2>
         {loadCompleteMessage}
       </h2>
