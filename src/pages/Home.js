@@ -30,11 +30,12 @@ export const Home = () => {
   const [editFront, setEditFront] = useState('')
   const [editBack, setEditBack] = useState('')
   const [editDeckName, setEditDeckName] = useState('')
+  const [combineState, setCombineState] = useState(0)
+  const [mainDeck, setMainDeck] = useState({})
+  const [subDeck, setSubDeck] = useState({})
+
 
   const createDeck = () => {
-    if (decks.some(deck => deck.name == inputValue)) {
-      console.log('Deck with the same name already exists')
-    } else {
       const newDeck = {
         name: inputValue,
         cards: [],
@@ -45,7 +46,6 @@ export const Home = () => {
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
       setDecks(updatedDecks)
       setInputValue('')
-    }
   }
 
   const removeDeck = (id) => {
@@ -113,7 +113,7 @@ export const Home = () => {
   const removeCard = (id) => {
     setDecks(prevDecks => {
       const updatedDecks = prevDecks.map((deck) => {
-        if (deck.name == filteredDeck.name) {
+        if (deck.id == filteredDeck.id) {
           const updatedCards = deck.cards.filter((card) => {
             return card.id !== id
           })
@@ -131,7 +131,7 @@ export const Home = () => {
     setDecks(prevDecks => {
       const updatedDecks = prevDecks.map(deck => {
         if (deck.id == editDeck.id) {
-          return {...deck, name: editDeckName}
+          return { ...deck, name: editDeckName }
         } else return deck
       })
       setEditDecksVisible(false)
@@ -158,13 +158,40 @@ export const Home = () => {
     })
   }
 
+  const combineDecks = () => {
+    if (mainDeck.cards !== undefined && subDeck.cards !== undefined) {
+      const cardFronts = mainDeck.cards.map((card) => { return card.front })
+      const cardBacks = mainDeck.cards.map((card) => { return card.back })
+
+      let maxID = 0
+      mainDeck.cards.forEach(card => {
+        if (card.id > maxID) {
+          maxID = card.id
+        }
+      })
+
+
+      subDeck.cards.forEach(card => {
+        if (!cardFronts.includes(card.front) && !cardBacks.includes(card.back)) {
+          mainDeck.cards.push({ ...card, id: maxID++})
+        }
+      })
+      const updatedDecks = decks.filter(deck => deck.id !== subDeck.id)
+      setDecks(updatedDecks)
+      setCombineState(0)
+      setMainDeck({})
+      setSubDeck({})
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+    } else console.log('select something')
+  }
+
   return (
     <div>
       {editDecksVisible == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
             <p>{editDeck.name}</p>
-            <input placeholder="New deck name..." onChange={(event) => setEditDeckName(event.target.value)}/>
+            <input placeholder="New deck name..." onChange={(event) => setEditDeckName(event.target.value)} />
             <button onClick={completeEditDeck}>Submit edit</button>
           </div>
         </div>
@@ -194,6 +221,28 @@ export const Home = () => {
               <button onClick={createDeck}>Create</button>
             </div>
             <h2>View Deck</h2>
+
+            {combineState == 0 && (
+              <div>
+                <button onClick={() => { setCombineState(1) }}>
+                  Combine decks
+                </button>
+                <h2></h2>
+              </div>
+            )
+            }
+
+            {combineState !== 0 && (
+              <div>
+                <p>After combining, the combined deck <br />will retain the main deck properties</p>
+                <p>Main deck: {mainDeck.name}</p>
+                <p>Sub deck: {subDeck.name}</p>
+                <button onClick={combineDecks}>Confirm</button>
+                <h2></h2>
+              </div>
+            )
+            }
+
             <table class='view-deck' style={{ backgroundColor: 'black' }}>
               <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
               <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Amount of Cards</th>
@@ -210,7 +259,26 @@ export const Home = () => {
                     <button onClick={() => {
                       setEditDecksVisible(true)
                       setEditDeck(deck)
-                      }}>Edit Deck</button>
+                    }}>Edit Deck</button>
+
+                    {combineState == 1 && (
+                      <button onClick={() => {
+                        setCombineState(2)
+                        setMainDeck(deck)
+                      }}>
+                        Set main deck
+                      </button>
+                    )
+                    }
+
+                    {(combineState == 2 && deck.name !== mainDeck.name) && (
+                      <button onClick={() => {
+                        setSubDeck(deck)
+                      }}>
+                        Set sub deck
+                      </button>
+                    )
+                    }
                   </tr>
                 )
               })}

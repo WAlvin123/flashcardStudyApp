@@ -2,7 +2,7 @@ import { saveAs } from "file-saver"
 import { useDeckState } from "../components/useDeckState"
 import { useEffect, useState } from "react"
 
-// TODO: Append decks rather than overwrite all decks.
+// TODO: Append decks, but only append if names are different. Otherwise, combine decks with similar names exlcuding the cards that are the exact same.
 
 export const Import = () => {
   const [decks, setDecks] = useDeckState()
@@ -28,15 +28,15 @@ export const Import = () => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      const loadedFileObject = JSON.parse(e.target.result)
-      const localStorageObject = localStorage.getItem('decks') ? JSON.parse(localStorage.getItem('decks')) : [];
-      let newID = localStorageObject.length + 1
-
-      const newDecks = loadedFileObject.map(deck => {
+      const loadedDecks = JSON.parse(e.target.result)
+      const storedDecks = localStorage.getItem('decks') ? JSON.parse(localStorage.getItem('decks')) : [];
+     
+      let newID = storedDecks.length + 1
+      const newDecks = loadedDecks.map(deck => {
         newID++
         return {...deck, name:`${deck.name} [IMPORTED]`, id: newID}
       })
-      const updatedDecks = [...localStorageObject, ...newDecks]
+      const updatedDecks = [...storedDecks, ...newDecks]
       setLoadedDeck(updatedDecks)
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
       setLoadCompleteMessage("The decks have been successfully loaded")
