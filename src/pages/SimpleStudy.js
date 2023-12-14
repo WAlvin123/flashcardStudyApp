@@ -18,6 +18,7 @@ export const SimpleStudy = () => {
   const [modalState, setModalState] = useState(false)
   const [answerState, setAnswerState] = useState(0)
   const [score, setScore] = useState(0)
+  const [studySide, setStudySide] = useState('')
 
   const handleSelect = (selectedDeck) => {
     const filteredIndex = decks.findIndex(deck => deck.name == selectedDeck)
@@ -34,7 +35,10 @@ export const SimpleStudy = () => {
       .number()
       .required()
       .max(filteredDeck.cards.length)
-      .min(1)
+      .min(1),
+    studySide: yup
+      .string()
+      .required()
   })
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -49,6 +53,7 @@ export const SimpleStudy = () => {
         studyArray.push(filteredDeck.cards[randomIndex])
       }
     }
+    setStudySide(submission.studySide)
     setRandomCards(studyArray)
     setModalState(true)
   }
@@ -71,7 +76,6 @@ export const SimpleStudy = () => {
   }
 
   const handleBad = () => {
-
     setRandomCards(prevRandom => {
       const firstCard = { ...prevRandom[0], firstTry: false }
       const remainingCards = prevRandom.slice(1)
@@ -90,7 +94,7 @@ export const SimpleStudy = () => {
 
   return (
     <div>
-      {modalState == true && (
+      {(modalState == true && studySide == 'front') && (
         <div class='modalBackground'>
           <div class='modalContainer'>
             {randomCards.length > 0 && (
@@ -104,14 +108,51 @@ export const SimpleStudy = () => {
                   <div>
                     <h2>{randomCards[0].back}</h2>
                     <p>How did you feel about this card?</p>
-                    <button onClick={handleGood}>Memorized</button>
                     <button onClick={handleBad}>Try again</button>
+                    <button onClick={handleGood}>Memorized</button>
                   </div>
                 )}
                 <h2>Score: {score}</h2>
                 <button onClick={handleFinish}>Finish studying</button>
               </div>
             )}
+
+
+
+            {randomCards.length == 0 && (
+              <div>
+                <h2>You scored {score}</h2>
+                <button onClick={handleFinish}>Finish studying</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {(modalState == true && studySide == 'back') && (
+        <div class='modalBackground'>
+          <div class='modalContainer'>
+            {randomCards.length > 0 && (
+              <div class='mid-study'>
+                <h2>{randomCards[0].back}</h2>
+                {answerState == 0 && (
+                  <button onClickCapture={() => { setAnswerState(1) }}>Show Answer</button>
+                )}
+
+                {answerState == 1 && (
+                  <div>
+                    <h2>{randomCards[0].front}</h2>
+                    <p>How did you feel about this card?</p>
+                    <button onClick={handleBad}>Try again</button>
+                    <button onClick={handleGood}>Memorized</button>
+                  </div>
+                )}
+                <h2>Score: {score}</h2>
+                <button onClick={handleFinish}>Finish studying</button>
+              </div>
+            )}
+
+
 
             {randomCards.length == 0 && (
               <div>
@@ -141,7 +182,7 @@ export const SimpleStudy = () => {
         </select>
         {filteredDeck.cards.length !== 0 && (
           <p>Selected deck contains: {filteredDeck.cards.length} cards</p>
-          )}
+        )}
       </div>
 
       <div className='input-amount'>
@@ -150,6 +191,13 @@ export const SimpleStudy = () => {
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <input {...register('studyAmount')} />
+          <select {...register('studySide')}>
+            <option>
+              ------
+            </option>
+            <option>front</option>
+            <option>back</option>
+          </select>
           <input type='submit' />
         </form>
       </div>
