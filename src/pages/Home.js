@@ -36,16 +36,16 @@ export const Home = () => {
 
 
   const createDeck = () => {
-      const newDeck = {
-        name: inputValue,
-        cards: [],
-        id: decks.length == 0 || decks[decks.length - 1].id + 1,
-        column: 0
-      }
-      const updatedDecks = [...decks, newDeck]
-      localStorage.setItem('decks', JSON.stringify(updatedDecks))
-      setDecks(updatedDecks)
-      setInputValue('')
+    const newDeck = {
+      name: inputValue,
+      cards: [],
+      id: decks.length == 0 || decks[decks.length - 1].id + 1,
+      column: 0
+    }
+    const updatedDecks = [...decks, newDeck]
+    localStorage.setItem('decks', JSON.stringify(updatedDecks))
+    setDecks(updatedDecks)
+    setInputValue('')
   }
 
   const removeDeck = (id) => {
@@ -146,7 +146,13 @@ export const Home = () => {
         if (deck.name == editCard.deck) {
           const updatedCards = deck.cards.map(card => {
             if (card.id == editCard.id) {
-              return { ...card, front: editFront, back: editBack }
+              if (editFront == '' && editBack == '') {
+                return card
+              } else if (editFront == '') {
+                return {...card, back: editBack}
+              } else if (editBack == '') {
+                return {...card, front: editFront}
+              } else return { ...card, front: editFront, back: editBack }
             } else return card
           })
           return { ...deck, cards: updatedCards }
@@ -154,6 +160,8 @@ export const Home = () => {
       })
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
       setEditCardsVisible(false)
+      setEditFront('')
+      setEditBack('')
       return updatedDecks
     })
   }
@@ -172,7 +180,7 @@ export const Home = () => {
 
       subDeck.cards.forEach(card => {
         if (!cardFronts.includes(card.front) && !cardBacks.includes(card.back)) {
-          mainDeck.cards.push({ ...card, id: maxID++})
+          mainDeck.cards.push({ ...card, id: maxID++ })
         }
       })
       const updatedDecks = decks.filter(deck => deck.id !== subDeck.id)
@@ -200,8 +208,9 @@ export const Home = () => {
         <div class='modalBackground'>
           <div class='modalContainer'>
             <p>Front: {editCard.front} | Back: {editCard.back} | Deck: {editCard.deck} | ID: {editCard.id}</p>
-            <input placeholder="New front..." onChange={(event) => { setEditFront(event.target.value) }} />
-            <input placeholder="New back..." onChange={(event) => { setEditBack(event.target.value) }} />
+            <p>Note: If you leave a field empty, then that field will remain uneditted</p>
+            <input placeholder={editCard.front} onChange={(event) => { setEditFront(event.target.value) }} />
+            <input placeholder={editCard.back} onChange={(event) => { setEditBack(event.target.value) }} />
             <button onClick={completeEdit}>Submit edits</button>
           </div>
         </div>
@@ -236,7 +245,7 @@ export const Home = () => {
                 <p>After combining, the combined deck <br />will retain the main deck properties</p>
                 <p>Main deck: {mainDeck.name}</p>
                 <p>Sub deck: {subDeck.name}</p>
-                <button onClick={combineDecks}>Confirm</button>                
+                <button onClick={combineDecks}>Confirm</button>
                 <button onClick={() => { setCombineState(0) }}>Return</button>
 
                 <h2></h2>
@@ -264,7 +273,7 @@ export const Home = () => {
                     {combineState == 1 && (
                       <button onClick={() => {
                         setCombineState(2)
-                        setMainDeck({...deck})
+                        setMainDeck({ ...deck })
                       }}>
                         Set main deck
                       </button>

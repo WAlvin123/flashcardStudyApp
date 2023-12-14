@@ -117,8 +117,6 @@ export const SimpleStudy = () => {
               </div>
             )}
 
-
-
             {randomCards.length == 0 && (
               <div>
                 <h2>You scored {score}</h2>
@@ -152,8 +150,6 @@ export const SimpleStudy = () => {
               </div>
             )}
 
-
-
             {randomCards.length == 0 && (
               <div>
                 <h2>You scored {score}</h2>
@@ -163,7 +159,6 @@ export const SimpleStudy = () => {
           </div>
         </div>
       )}
-
 
       <div className='select-deck'>
         <h2>Select the deck you would like to study from</h2>
