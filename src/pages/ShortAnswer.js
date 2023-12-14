@@ -51,7 +51,6 @@ export const ShortAnswer = () => {
   const onSubmit = (submission) => {
     const smallerArray = []
     if (selectedOption !== '------' && studySide !== '------') {
-      if (submission.studyAmount - 1 < filteredDeck.cards.length) {
         while (smallerArray.length < submission.studyAmount) {
           const random = Math.floor(Math.random() * filteredDeck.cards.length)
           if (!smallerArray.includes(filteredDeck.cards[random])) {
@@ -61,7 +60,6 @@ export const ShortAnswer = () => {
         setStudySide(submission.studySide)
         setRandomCards(smallerArray)
         setTotal(submission.studyAmount)
-      }
     }
   }
 

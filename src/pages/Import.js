@@ -2,7 +2,7 @@ import { saveAs } from "file-saver"
 import { useDeckState } from "../components/useDeckState"
 import { useEffect, useState } from "react"
 
-// TODO: Append decks, but only append if names are different. Otherwise, combine decks with similar names exlcuding the cards that are the exact same.
+// TODO: Fully comprehend the newly implemented import function.
 
 export const Import = () => {
   const [decks, setDecks] = useDeckState()
@@ -18,7 +18,7 @@ export const Import = () => {
   }, [])
 
   const handleFileSave = () => {
-    var blob = new Blob([localStorage.decks], {type: "text/plain;charset=utf-8"})
+    var blob = new Blob([localStorage.decks], { type: "text/plain;charset=utf-8" })
     saveAs(blob, `${deckName}.txt`)
   }
 
@@ -30,41 +30,62 @@ export const Import = () => {
     reader.onload = (e) => {
       const loadedDecks = JSON.parse(e.target.result)
       const storedDecks = localStorage.getItem('decks') ? JSON.parse(localStorage.getItem('decks')) : [];
-     
-      let newID = storedDecks.length + 1
-      const newDecks = loadedDecks.map(deck => {
-        newID++
-        return {...deck, name:`${deck.name} [IMPORTED]`, id: newID}
+      const updatedDecks = [];
+
+      storedDecks.forEach(deck => {
+        const matchingDeckIndex = loadedDecks.findIndex(loadedDeck => loadedDeck.name == deck.name)
+        let maxID = 0
+        deck.cards.forEach(card => {
+          if (card.id > maxID) {
+            maxID = card.id
+          }
+        })
+        if (matchingDeckIndex !== -1) {
+          const matchingDeck = loadedDecks[matchingDeckIndex]
+          const storedFronts = deck.cards.map(card => {return card.front})
+          const storedBacks = deck.cards.map(card => {return card.back})
+          matchingDeck.cards.forEach(card => {
+            if (!storedFronts.includes(card.front) && !storedBacks.includes(card.back)) {
+              deck.cards.push({...card, id: ++maxID})
+            }
+          })
+          loadedDecks.splice(matchingDeckIndex, 1)
+        }
+        updatedDecks.push({...deck, id: Math.random() * 1000})
       })
-      const updatedDecks = [...storedDecks, ...newDecks]
-      setLoadedDeck(updatedDecks)
+
+      loadedDecks.forEach(deck => {
+        updatedDecks.push(deck)
+      })
+
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
-      setLoadCompleteMessage("The decks have been successfully loaded")
     }
     reader.readAsText(file)
   }
 
+
   return (
-    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr'}}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
       <div>
-      <h2 style={{paddingTop:'20px'}}>Import deck through txt</h2>
-      <h3>Note: Decks with the same name will not be loaded</h3>
-      <input type='file' accept='.txt' onChange={handleFileChange}/>
-      <h2>---------------------------------</h2>
-      <div>
-        {loadedDeck.map((deck) => {
-          return <div>{deck.name} | {deck.cards.length} cards</div>
-        })}
-      </div>
-      <h2>
-        {loadCompleteMessage}
-      </h2>
-      </div>
-      <div>
-        <h2 style={{paddingTop:'20px'}}>Save and export deck into a txt file</h2>
+        <h2 style={{ paddingTop: '20px' }}>Import deck through txt</h2>
+        <h3>Note: Decks with the same name will be combined <br/> 
+        taking only unique cards from the imported deck</h3>
+        <input type='file' accept='.txt' onChange={handleFileChange} />
+        <h2>---------------------------------</h2>
         <div>
-        <input onChange={event => {setDeckName(event.target.value)}}/>
-        <button onClick={handleFileSave}>Export Deck</button>
+          {loadedDeck.map((deck) => {
+            return <div>{deck.name} | {deck.cards.length} cards</div>
+          })}
+        </div>
+        <h2>
+          {loadCompleteMessage}
+        </h2>
+      </div>
+      <div>
+        <h2 style={{ paddingTop: '20px' }}>Save and export deck into a txt file</h2>
+        <div>
+          <input onChange={event => { setDeckName(event.target.value) }} />
+          <button onClick={handleFileSave}>Export Deck</button>
         </div>
       </div>
     </div>

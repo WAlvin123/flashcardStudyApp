@@ -6,6 +6,7 @@ import { MultipleChoice } from './pages/MultipleChoice';
 import { ShortAnswer } from './pages/ShortAnswer';
 import { Matching } from './pages/Matching';
 import { Import } from './pages/Import';
+import { SimpleStudy } from './pages/SimpleStudy';
 
 function App() {
 
@@ -16,7 +17,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='matching' element={<Matching/>}/>
+          <Route path='/simple' element={<SimpleStudy/>}/>
+          <Route path='/matching' element={<Matching/>}/>
           <Route path='/multiplechoice' element={<MultipleChoice/>}/>
           <Route path='/shortanswer' element={<ShortAnswer/>}/>
           <Route path='/importdeck' element={<Import/>}/>

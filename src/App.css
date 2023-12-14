@@ -30,7 +30,7 @@
 
 .navbar {
   display: grid;
-  grid-template-columns: 120px 120px 120px 160px 185px; 
+  grid-template-columns: 120px 120px 120px 160px 185px 180px; 
   justify-content:center;
   background-color: black;
 }

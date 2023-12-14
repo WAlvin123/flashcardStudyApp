@@ -170,7 +170,6 @@ export const Home = () => {
         }
       })
 
-
       subDeck.cards.forEach(card => {
         if (!cardFronts.includes(card.front) && !cardBacks.includes(card.back)) {
           mainDeck.cards.push({ ...card, id: maxID++})
@@ -220,7 +219,7 @@ export const Home = () => {
               <input onChange={(event) => { setInputValue(event.target.value) }} value={inputValue} />
               <button onClick={createDeck}>Create</button>
             </div>
-            <h2>View Deck</h2>
+            <h2>Decks</h2>
 
             {combineState == 0 && (
               <div>
@@ -237,7 +236,9 @@ export const Home = () => {
                 <p>After combining, the combined deck <br />will retain the main deck properties</p>
                 <p>Main deck: {mainDeck.name}</p>
                 <p>Sub deck: {subDeck.name}</p>
-                <button onClick={combineDecks}>Confirm</button>
+                <button onClick={combineDecks}>Confirm</button>                
+                <button onClick={() => { setCombineState(0) }}>Return</button>
+
                 <h2></h2>
               </div>
             )
@@ -252,7 +253,6 @@ export const Home = () => {
                   <tr>
                     <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
                     <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
-                    <td style={{ backgroundColor: 'white' }}>ID: {deck.id}     </td>
                     <button onClick={
                       () => { removeDeck(deck.id) }
                     }>Remove Deck</button>
@@ -264,14 +264,14 @@ export const Home = () => {
                     {combineState == 1 && (
                       <button onClick={() => {
                         setCombineState(2)
-                        setMainDeck(deck)
+                        setMainDeck({...deck})
                       }}>
                         Set main deck
                       </button>
                     )
                     }
 
-                    {(combineState == 2 && deck.name !== mainDeck.name) && (
+                    {(combineState == 2 && deck.id !== mainDeck.id) && (
                       <button onClick={() => {
                         setSubDeck(deck)
                       }}>
