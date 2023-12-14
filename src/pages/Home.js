@@ -247,7 +247,6 @@ export const Home = () => {
                 <p>Sub deck: {subDeck.name}</p>
                 <button onClick={combineDecks}>Confirm</button>
                 <button onClick={() => { setCombineState(0) }}>Return</button>
-
                 <h2></h2>
               </div>
             )
@@ -256,19 +255,23 @@ export const Home = () => {
             <table class='view-deck' style={{ backgroundColor: 'black' }}>
               <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
               <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Amount of Cards</th>
+              <th style={{ width: '100px', backgroundColor: 'black', color: "white" }}>Settings</th>
+
 
               {decks.map((deck) => {
                 return (
                   <tr>
                     <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
                     <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
+                    <td style={{ backgroundColor: 'white' }}>
                     <button onClick={
                       () => { removeDeck(deck.id) }
-                    }>Remove Deck</button>
+                    }>Remove</button>
                     <button onClick={() => {
                       setEditDecksVisible(true)
                       setEditDeck(deck)
-                    }}>Edit Deck</button>
+                    }}>Edit</button>
+                    </td>
 
                     {combineState == 1 && (
                       <button onClick={() => {
@@ -297,10 +300,10 @@ export const Home = () => {
             <h2>
               Create card
             </h2>
-            <form onSubmit={handleSubmit(createCard)}>
+            <form onSubmit={handleSubmit(createCard)} style={{ display: 'flex', flexDirection: 'column' }}>
               <input {...register('front')} value={formState.front}
                 onChange={(event) => { setFormState({ ...formState, front: event.target.value }) }} />
-              <input {...register('back')} value={formState.back}
+              <textarea {...register('back')} value={formState.back}
                 onChange={(event) => { setFormState({ ...formState, back: event.target.value }) }} />
               <select {...register('deck')}>
                 <option>------</option>
@@ -312,7 +315,7 @@ export const Home = () => {
                   )
                 })}
               </select>
-              <input type="submit" />
+              <input type="submit" value='Create'/>
             </form>
 
             <h2>
@@ -343,6 +346,7 @@ export const Home = () => {
                 <thead>
                   <th style={{ backgroundColor: "black", color: "white" }}>Front</th>
                   <th style={{ backgroundColor: "black", color: "white" }}>Back</th>
+                  <th style={{ width: '100px', backgroundColor: 'black', color: "white" }}>Settings</th>
                 </thead>
                 <tbody>
                   {decks[filteredDeckIndex].cards.map((card) => {
@@ -350,11 +354,11 @@ export const Home = () => {
                       <tr style={{ backgroundColor: "white" }}>
                         <td>{card.front}</td>
                         <td>{card.back}</td>
-                        <button onClick={() => { removeCard(card.id) }}>Remove Card</button>
+                        <button onClick={() => { removeCard(card.id) }}>Remove</button>
                         <button onClick={() => {
                           setEditCardsVisible(true)
                           setEditCard(card)
-                        }}>Edit Card</button>
+                        }}>Edit</button>
                       </tr>
                     )
                   })}

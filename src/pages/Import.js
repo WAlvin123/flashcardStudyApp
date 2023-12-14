@@ -28,7 +28,40 @@ export const Import = () => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      // TODO: Import (Do it again tomorrow)
+      const storedDecks = localStorage.getItem('decks') ? JSON.parse(localStorage.getItem('decks')) : [];
+      const loadedDecks = JSON.parse(e.target.result)  
+      const updatedDecks = [];
+
+      storedDecks.forEach(deck => {
+        const matchingIndex = loadedDecks.findIndex(loadedDeck => deck.name == loadedDeck.name)
+        const storedFronts = deck.cards.map(card => {return card.front})
+        const storedBacks = deck.cards.map(card => {return card.back})
+        let maxID = 0
+        deck.cards.forEach(card => {
+          if (card.id > maxID) {
+            maxID = card.id
+          }
+        })
+        
+        if (matchingIndex !== -1) {
+          const matchingDeck = loadedDecks[matchingIndex]
+          matchingDeck.cards.forEach(card => {
+            if (!storedFronts.includes(card.front) && !storedBacks.includes(card.back)) {
+              deck.cards.push({...card, id: ++maxID})
+            }
+          })
+          updatedDecks.push({...deck, id: Math.random() * 1000})
+          loadedDecks.splice(matchingIndex, 1)
+        } else {
+          updatedDecks.push({...deck, id: Math.random() * 1000})
+        }
+      })
+
+      loadedDecks.forEach(deck => {
+        updatedDecks.push({...deck, id: Math.random() * 1000})
+      })
+      setLoadCompleteMessage('Load successful')
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
     }
     reader.readAsText(file)
   }
