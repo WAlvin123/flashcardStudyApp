@@ -24,11 +24,14 @@ export const Home = () => {
     back: ''
   })
   const [editCardsVisible, setEditCardsVisible] = useState(false)
+  const [transferVisible, setTransferVisible] = useState(false)
   const [editDecksVisible, setEditDecksVisible] = useState(false)
   const [editCard, setEditCard] = useState({})
+  const [cardToTransfer, setCardToTransfer] = useState({})
   const [editDeck, setEditDeck] = useState({})
   const [editFront, setEditFront] = useState('')
   const [editBack, setEditBack] = useState('')
+  const [targetDeck, setTargetDeck] = useState('')
   const [editDeckName, setEditDeckName] = useState('')
   const [combineState, setCombineState] = useState(0)
   const [mainDeck, setMainDeck] = useState({})
@@ -149,9 +152,9 @@ export const Home = () => {
               if (editFront == '' && editBack == '') {
                 return card
               } else if (editFront == '') {
-                return {...card, back: editBack}
+                return { ...card, back: editBack }
               } else if (editBack == '') {
-                return {...card, front: editFront}
+                return { ...card, front: editFront }
               } else return { ...card, front: editFront, back: editBack }
             } else return card
           })
@@ -164,6 +167,28 @@ export const Home = () => {
       setEditBack('')
       return updatedDecks
     })
+  }
+
+  const transferCard = () => {
+    if (targetDeck !== '------') {
+      setDecks(prevDecks => {
+        const updatedDecks = prevDecks.map(deck => {
+          if (deck.name == targetDeck) {
+            if (!deck.cards.includes(cardToTransfer)) {
+              return { ...deck, cards: [...deck.cards, {...cardToTransfer, deck: deck.name}] }
+            } else return deck
+          } else if (deck.name == cardToTransfer.deck) {
+            return { ...deck, cards: deck.cards.filter(card => card.id !== cardToTransfer.id) }
+          } else return deck
+        })
+        setTargetDeck('------')
+        setTransferVisible(false)
+        localStorage.setItem('decks', JSON.stringify(updatedDecks))
+        return updatedDecks
+      })
+    } else {
+      setTransferVisible(false)
+    }
   }
 
   const combineDecks = () => {
@@ -204,6 +229,23 @@ export const Home = () => {
         </div>
       )}
 
+      {transferVisible == true && (
+        <div class='modalBackground'>
+          <div class='modalContainer'>
+            <h2>Select the deck you would like to transfer to below</h2>
+            <select onChange={event => setTargetDeck(event.target.value)}>
+              <option>------</option>
+              {decks.map(deck => {
+                if (deck.name !== cardToTransfer.deck) {
+                  return <option>{deck.name}</option>
+                }
+              })}
+            </select>
+            <button onClick={transferCard}>Confirm changes</button>
+          </div>
+        </div>
+      )}
+
       {editCardsVisible == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
@@ -211,6 +253,14 @@ export const Home = () => {
             <p>Note: If you leave a field empty, then that field will remain uneditted</p>
             <input placeholder={editCard.front} onChange={(event) => { setEditFront(event.target.value) }} />
             <input placeholder={editCard.back} onChange={(event) => { setEditBack(event.target.value) }} />
+            <select onChange={(event) => setTargetDeck(event.target.value)}>
+              <option>------</option>
+              {decks.map(deck => {
+                if (deck.name !== editCard.deck) {
+                  return <option>{deck.name}</option>
+                }
+              })}
+            </select>
             <button onClick={completeEdit}>Submit edits</button>
           </div>
         </div>
@@ -264,13 +314,13 @@ export const Home = () => {
                     <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
                     <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
                     <td style={{ backgroundColor: 'white' }}>
-                    <button onClick={
-                      () => { removeDeck(deck.id) }
-                    }>Remove</button>
-                    <button onClick={() => {
-                      setEditDecksVisible(true)
-                      setEditDeck(deck)
-                    }}>Edit</button>
+                      <button onClick={
+                        () => { removeDeck(deck.id) }
+                      }>Remove</button>
+                      <button onClick={() => {
+                        setEditDecksVisible(true)
+                        setEditDeck(deck)
+                      }}>Edit</button>
                     </td>
 
                     {combineState == 1 && (
@@ -315,7 +365,7 @@ export const Home = () => {
                   )
                 })}
               </select>
-              <input type="submit" value='Create'/>
+              <input type="submit" value='Create' />
             </form>
 
             <h2>
@@ -346,7 +396,7 @@ export const Home = () => {
                 <thead>
                   <th style={{ backgroundColor: "black", color: "white" }}>Front</th>
                   <th style={{ backgroundColor: "black", color: "white" }}>Back</th>
-                  <th style={{ width: '100px', backgroundColor: 'black', color: "white" }}>Settings</th>
+                  <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Settings</th>
                 </thead>
                 <tbody>
                   {decks[filteredDeckIndex].cards.map((card) => {
@@ -359,6 +409,10 @@ export const Home = () => {
                           setEditCardsVisible(true)
                           setEditCard(card)
                         }}>Edit</button>
+                        <button onClick={() => {
+                          setTransferVisible(true)
+                          setCardToTransfer(card)
+                        }}>Transfer</button>
                       </tr>
                     )
                   })}

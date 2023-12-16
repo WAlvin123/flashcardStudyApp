@@ -29,39 +29,38 @@ export const Import = () => {
 
     reader.onload = (e) => {
       const storedDecks = localStorage.getItem('decks') ? JSON.parse(localStorage.getItem('decks')) : [];
-      const loadedDecks = JSON.parse(e.target.result)  
+      const loadedDecks = JSON.parse(e.target.result)
       const updatedDecks = [];
 
       storedDecks.forEach(deck => {
-        const matchingIndex = loadedDecks.findIndex(loadedDeck => deck.name == loadedDeck.name)
+        const matchingIndex = loadedDecks.findIndex(loadedDeck => loadedDeck.name == deck.name)
         const storedFronts = deck.cards.map(card => {return card.front})
         const storedBacks = deck.cards.map(card => {return card.back})
         let maxID = 0
         deck.cards.forEach(card => {
-          if (card.id > maxID) {
+          if (maxID < card.id) {
             maxID = card.id
           }
         })
-        
         if (matchingIndex !== -1) {
           const matchingDeck = loadedDecks[matchingIndex]
           matchingDeck.cards.forEach(card => {
             if (!storedFronts.includes(card.front) && !storedBacks.includes(card.back)) {
-              deck.cards.push({...card, id: ++maxID})
+              deck.cards.push({...card, id:++maxID})
             }
           })
-          updatedDecks.push({...deck, id: Math.random() * 1000})
+          updatedDecks.push({...deck, id: Math.random() * 100})
           loadedDecks.splice(matchingIndex, 1)
         } else {
-          updatedDecks.push({...deck, id: Math.random() * 1000})
+          updatedDecks.push(deck)
         }
       })
 
       loadedDecks.forEach(deck => {
-        updatedDecks.push({...deck, id: Math.random() * 1000})
+        updatedDecks.push(deck)
       })
-      setLoadCompleteMessage('Load successful')
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
+
     }
     reader.readAsText(file)
   }
@@ -70,8 +69,8 @@ export const Import = () => {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
       <div>
         <h2 style={{ paddingTop: '20px' }}>Import deck through txt</h2>
-        <h3>Note: Decks with the same name will be combined <br/> 
-        taking only unique cards from the imported deck</h3>
+        <h3>Note: Decks with the same name will be combined <br />
+          taking only unique cards from the imported deck</h3>
         <input type='file' accept='.txt' onChange={handleFileChange} />
         <h2>---------------------------------</h2>
         <div>
