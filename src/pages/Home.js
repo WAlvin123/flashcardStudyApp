@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
 import "./Home.css"
-// TODO: Make deck removable even when viewing (Or make deck unremovable when viewing)
 
 export const Home = () => {
   useEffect(() => {
@@ -171,21 +170,26 @@ export const Home = () => {
 
   const transferCard = () => {
     if (targetDeck !== '------') {
-      setDecks(prevDecks => {
-        const updatedDecks = prevDecks.map(deck => {
-          if (deck.name == targetDeck) {
-            if (!deck.cards.includes(cardToTransfer)) {
-              return { ...deck, cards: [...deck.cards, {...cardToTransfer, deck: deck.name}] }
+      const deckIndex = decks.findIndex(deck => targetDeck == deck.name)
+      const fronts = decks[deckIndex].cards.map(card => { return card.front })
+      const backs = decks[deckIndex].cards.map(card => { return card.back })
+      if (!fronts.includes(cardToTransfer.front) && !backs.includes(cardToTransfer.back)) {
+        setDecks(prevDecks => {
+          const updatedDecks = prevDecks.map(deck => {
+            if (deck.name == targetDeck) {
+              return { ...deck, cards: [...deck.cards, { ...cardToTransfer, deck: targetDeck, id: Math.random() * 100 }] }
+            } else if (deck.name == cardToTransfer.deck) {
+              return { ...deck, cards: deck.cards.filter(card => card.id !== cardToTransfer.id) }
             } else return deck
-          } else if (deck.name == cardToTransfer.deck) {
-            return { ...deck, cards: deck.cards.filter(card => card.id !== cardToTransfer.id) }
-          } else return deck
+          })
+          setTransferVisible(false)
+          setTargetDeck('------')
+          localStorage.setItem('decks', JSON.stringify(updatedDecks))
+          return updatedDecks
         })
-        setTargetDeck('------')
-        setTransferVisible(false)
-        localStorage.setItem('decks', JSON.stringify(updatedDecks))
-        return updatedDecks
-      })
+      } else {
+        console.log('card already exists')
+      }
     } else {
       setTransferVisible(false)
     }
@@ -253,14 +257,6 @@ export const Home = () => {
             <p>Note: If you leave a field empty, then that field will remain uneditted</p>
             <input placeholder={editCard.front} onChange={(event) => { setEditFront(event.target.value) }} />
             <input placeholder={editCard.back} onChange={(event) => { setEditBack(event.target.value) }} />
-            <select onChange={(event) => setTargetDeck(event.target.value)}>
-              <option>------</option>
-              {decks.map(deck => {
-                if (deck.name !== editCard.deck) {
-                  return <option>{deck.name}</option>
-                }
-              })}
-            </select>
             <button onClick={completeEdit}>Submit edits</button>
           </div>
         </div>
@@ -368,9 +364,14 @@ export const Home = () => {
               <input type="submit" value='Create' />
             </form>
 
+            <div>
             <h2>
-              View card
+              View cards
             </h2>
+            <p>
+              Select a deck you would like to view the cards of
+            </p>
+            </div>
             <select onChange={(event => {
               if (event.target.value !== '------') {
                 handleChange(event.target.value)
