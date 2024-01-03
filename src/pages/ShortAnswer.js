@@ -3,12 +3,13 @@ import { useEffect, useState, useTransition } from "react"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from 'yup'
 import { useForm } from "react-hook-form"
+import { PreStudyInput } from "../components/PrestudyInput"
 
 export const ShortAnswer = () => {
   const [decks, setDecks] = useDeckState()
   const [studySide, setStudySide] = useState('')
   const [randomCards, setRandomCards] = useState([])
-  const [filteredDeck, setFilteredDeck] = useState({cards: ['initial state']})
+  const [filteredDeck, setFilteredDeck] = useState({ cards: ['initial state'] })
   const [userInput, setUserInput] = useState('')
   const [showAnswer, setShowAnswer] = useState(false)
   const [selectedOption, setSelectedOption] = useState('------')
@@ -25,41 +26,41 @@ export const ShortAnswer = () => {
 
   const handleSelect = (deckname) => {
     if (deckname === "------") {
-      setFilteredDeck({cards:['initial']})
+      setFilteredDeck({ cards: ['initial'] })
       setSelectedOption('------')
-    } else { 
-    const selectedDeck = decks.find(deck => deckname === deck.name)
-    setFilteredDeck(selectedDeck)
-    setSelectedOption(deckname)
+    } else {
+      const selectedDeck = decks.find(deck => deckname === deck.name)
+      setFilteredDeck(selectedDeck)
+      setSelectedOption(deckname)
     }
   }
 
   const submissionSchema = yup.object().shape({
     studyAmount: yup
-    .number("Please enter a number")
-    .typeError("Please enter a number")
-    .required("Please enter something")
-    .min(0, "Please enter a number >0")
-    .max(filteredDeck.cards.length, "The input surpasses the amount of cards in the deck"),
+      .number("Please enter a number")
+      .typeError("Please enter a number")
+      .required("Please enter something")
+      .min(0, "Please enter a number >0")
+      .max(filteredDeck.cards.length, "The input surpasses the amount of cards in the deck"),
     studySide: yup.string().required()
   })
 
-  const { register, handleSubmit, formState: {errors} } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(submissionSchema)
   })
 
   const onSubmit = (submission) => {
     const smallerArray = []
     if (selectedOption !== '------' && studySide !== '------') {
-        while (smallerArray.length < submission.studyAmount) {
-          const random = Math.floor(Math.random() * filteredDeck.cards.length)
-          if (!smallerArray.includes(filteredDeck.cards[random])) {
-            smallerArray.push(filteredDeck.cards[random])
-          }
+      while (smallerArray.length < submission.studyAmount) {
+        const random = Math.floor(Math.random() * filteredDeck.cards.length)
+        if (!smallerArray.includes(filteredDeck.cards[random])) {
+          smallerArray.push(filteredDeck.cards[random])
         }
-        setStudySide(submission.studySide)
-        setRandomCards(smallerArray)
-        setTotal(submission.studyAmount)
+      }
+      setStudySide(submission.studySide)
+      setRandomCards(smallerArray)
+      setTotal(submission.studyAmount)
     }
   }
 
@@ -166,41 +167,21 @@ export const ShortAnswer = () => {
           </div>
         </div>
       )}
-
-      <div class='study-options'>
-        <h2>Select the deck you would like to study from</h2>
-        <p>Guide: Enter the corresponding side of the card</p>
-        <select onChange={(event) => {
-          handleSelect(event.target.value)
-          setSelectedOption(event.target.value)
-        }}>
-          <option>------</option>
-          {decks.map((decks) => {
-            return (
-              <option>
-                {decks.name}
-              </option>
-            )
-          })}
-        </select>
-        {selectedOption !== "------" && <p>Selected deck contains: {filteredDeck.cards.length} cards</p>}
-        <div>
-          <h2>Input the amount of cards would like to study, and <br />
-            select what side you would like the question prompt to be</h2>
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <input {...register('studyAmount')} />
-              <select {...register('studySide')}>
-                <option>------</option>
-                <option>front</option>
-                <option>back</option>
-              </select>
-              <input type='submit' />
-            </form>
-            <p>{errors.studyAmount?.message}</p>
-          </div>
-        </div>
-      </div>
+      <PreStudyInput
+        guideMessage={
+          <p>
+            Guide: Enter the corresponding side of the card
+          </p>
+        }
+        handleSelect={handleSelect}
+        selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
+        decks={decks}
+        filteredDeck={filteredDeck}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        register={register}
+        errors={errors} />
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
+import { PreStudyInput } from '../components/PrestudyInput';
 
 export const SimpleStudy = () => {
   useEffect(() => {
@@ -19,26 +20,27 @@ export const SimpleStudy = () => {
   const [answerState, setAnswerState] = useState(0)
   const [score, setScore] = useState(0)
   const [studySide, setStudySide] = useState('')
+  const [selectedOption, setSelectedOption] = useState('------')
 
-  const handleSelect = (selectedDeck) => {
-    const filteredIndex = decks.findIndex(deck => deck.name == selectedDeck)
-    if (filteredIndex !== -1) {
-      setFilteredDeck(decks[filteredIndex])
-      console.log(filteredDeck)
-    } else if (selectedDeck == '------') {
-      setFilteredDeck({ cards: [] })
+  const handleSelect = (deckname) => {
+    if (deckname === "------") {
+      setFilteredDeck({ cards: ['initial'] })
+      setSelectedOption('------')
+    } else {
+      const selectedDeck = decks.find(deck => deckname === deck.name)
+      setFilteredDeck(selectedDeck)
+      setSelectedOption(deckname)
     }
   }
 
   const submissionSchema = yup.object().shape({
     studyAmount: yup
-      .number()
-      .required()
-      .max(filteredDeck.cards.length)
-      .min(1),
-    studySide: yup
-      .string()
-      .required()
+      .number("Please enter a number")
+      .typeError("Please enter a number")
+      .required("Please enter something")
+      .min(0, "Please enter a number >0")
+      .max(filteredDeck.cards.length, "The input surpasses the amount of cards in the deck"),
+    studySide: yup.string().required()
   })
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -160,42 +162,22 @@ export const SimpleStudy = () => {
         </div>
       )}
 
-      <div className='select-deck'>
-        <h2>Select the deck you would like to study from</h2>
-        <p>Guide: Respond with whether or not you have the other side of card memorized. <br />
-          If not, then the question will be moved to the back and asked again
-        </p>
-        <select onChange={(event) => handleSelect(event.target.value)}>
-          <option>------</option>
-          {decks.map(deck => {
-            return (
-              <option>
-                {deck.name}
-              </option>
-            )
-          })}
-        </select>
-        {filteredDeck.cards.length !== 0 && (
-          <p>Selected deck contains: {filteredDeck.cards.length} cards</p>
-        )}
-      </div>
-
-      <div className='input-amount'>
-        <h2>
-          Input the amount of cards you would like to study
-        </h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input {...register('studyAmount')} />
-          <select {...register('studySide')}>
-            <option>
-              ------
-            </option>
-            <option>front</option>
-            <option>back</option>
-          </select>
-          <input type='submit' />
-        </form>
-      </div>
+      <PreStudyInput
+        guideMessage={
+          <p>
+            Guide: Simple memorization. If the card is not memorized <br />
+            it will be pushed to the back of the study set
+          </p>
+        }
+        handleSelect={handleSelect}
+        selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
+        decks={decks}
+        filteredDeck={filteredDeck}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        register={register}
+        errors={errors} />
     </div>
   )
 }

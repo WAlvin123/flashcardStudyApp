@@ -46,7 +46,7 @@ export const Matching = () => {
       .max(filteredDeck.cards.length, "The input surpasses the amount of cards in the deck"),
   })
 
-  const { register, handleSubmit, formState: {errors} } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(submissionSchema)
   })
 
@@ -186,7 +186,7 @@ export const Matching = () => {
           </div>
         </div>
       )}
-
+      
       <div class='study-options'>
         <h2>Select the deck you would like to study from</h2>
         <p>Guide: Match the front with the correct opposite side of the card</p>
