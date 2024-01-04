@@ -8,7 +8,7 @@
 
 .decks {
   padding-bottom: 20px;
-  width: 50vw;
+  width: 100vw;
   overflow: visible;
   background-color: white;
   align-items: center;
@@ -18,7 +18,7 @@
 
 .cards {
   padding-bottom: 20px;
-  width: 50vw;
+  width: 100vw;
   overflow: visible;
   background-color: white;
   align-items: center;

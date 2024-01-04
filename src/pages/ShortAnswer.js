@@ -123,7 +123,8 @@ export const ShortAnswer = () => {
                 </h2>
                 {showAnswer && randomCards[0].back}
                 <p></p>
-                <h2>Current score: {score}</h2>
+                <h3>Cards remaining: {randomCards.length}</h3>
+                <h3>Score: {score}</h3>                
                 <button onClick={handleFinishStudy}>Finish studying</button>
               </div>
             )}
@@ -154,7 +155,8 @@ export const ShortAnswer = () => {
                 </h2>
                 {showAnswer && randomCards[0].back}
                 <p></p>
-                <h2>Current score: {score}</h2>
+                <h3>Cards remaining: {randomCards.length}</h3>
+                <h3>Score: {score}</h3>
                 <button onClick={handleFinishStudy}>Finish studying</button>
               </div>)}
 

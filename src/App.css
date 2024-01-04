@@ -29,10 +29,11 @@
 }
 
 .navbar {
-  display: grid;
-  grid-template-columns: 120px 120px 120px 160px 185px 180px; 
-  justify-content:center;
+  display: flex;
+  justify-content:space-between;
   background-color: black;
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 @keyframes App-logo-spin {

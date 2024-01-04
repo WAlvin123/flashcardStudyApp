@@ -114,7 +114,8 @@ export const SimpleStudy = () => {
                     <button onClick={handleGood}>Memorized</button>
                   </div>
                 )}
-                <h2>Score: {score}</h2>
+                <h3>Cards remaining: {randomCards.length}</h3>
+                <h3>Score: {score}</h3>                  
                 <button onClick={handleFinish}>Finish studying</button>
               </div>
             )}

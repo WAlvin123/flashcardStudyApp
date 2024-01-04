@@ -140,7 +140,7 @@ export const MultipleChoice = () => {
           <div class='modalContainer'>
             {randomCards.length !== 0 && (
               <div>
-                {randomCards[0].front}
+                <h2>{randomCards[0].front}</h2>
                 <div>
                   {multipleChoice.map((choice) => {
                     return (
@@ -150,8 +150,10 @@ export const MultipleChoice = () => {
                     )
                   })}
                 </div>
-                <h2>Score: {score}</h2>
-                <h2>{answerMessage}</h2>
+                <p>Selected choice: {choice}</p>
+                <h3>Cards remaining: {randomCards.length}</h3>
+                <h3>Score: {score}</h3>
+                <p>{answerMessage}</p>
                 <button onClick={handleCheckAnswer}>Check Answer</button>
                 <button onClick={handleFinishStudy}>Finish studying</button>
               </div>
@@ -199,8 +201,12 @@ export const MultipleChoice = () => {
         </div>
       )}
       <PreStudyInput
-        guideMessage={<p>Guide: Select the right option corresponding <br/>
-         to the opposite side of the card</p>}
+        guideMessage={
+          <p>
+            Guide: Select the right option corresponding <br />
+            to the opposite side of the card
+          </p>
+        }
         handleSelect={handleSelect}
         selectedOption={selectedOption}
         setSelectedOption={setSelectedOption}

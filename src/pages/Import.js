@@ -60,7 +60,7 @@ export const Import = () => {
         updatedDecks.push(deck)
       })
       localStorage.setItem('decks', JSON.stringify(updatedDecks))
-
+      setLoadCompleteMessage('Decks have been succesfully loaded')
     }
     reader.readAsText(file)
   }
@@ -69,15 +69,9 @@ export const Import = () => {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
       <div>
         <h2 style={{ paddingTop: '20px' }}>Import deck through txt</h2>
-        <h3>Note: Decks with the same name will be combined <br />
-          taking only unique cards from the imported deck</h3>
+        <p>Note: Decks with the same name will be combined <br />
+          taking only unique cards from the imported deck</p>
         <input type='file' accept='.txt' onChange={handleFileChange} />
-        <h2>---------------------------------</h2>
-        <div>
-          {loadedDeck.map((deck) => {
-            return <div>{deck.name} | {deck.cards.length} cards</div>
-          })}
-        </div>
         <h2>
           {loadCompleteMessage}
         </h2>
