@@ -23,3 +23,8 @@
   display:grid;
   grid-template-columns: 1fr 1fr;
 }
+
+.confirmation-message {
+  color: red;
+  font-weight: bold;
+}

@@ -4,6 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from 'yup'
 import { useForm } from "react-hook-form"
 import { PreStudyInput } from "../components/PrestudyInput"
+import { ConfirmComplete } from "../components/ConfirmComplete"
+import { Results } from "../components/Results"
 
 export const ShortAnswer = () => {
   const [decks, setDecks] = useDeckState()
@@ -16,6 +18,7 @@ export const ShortAnswer = () => {
   const [score, setScore] = useState(0)
   const [wrong, setWrong] = useState(false)
   const [total, setTotal] = useState(0)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -97,9 +100,17 @@ export const ShortAnswer = () => {
   }
 
   const handleFinishStudy = () => {
-    setScore(0)
-    setStudySide('')
-    setUserInput('')
+    if (randomCards.length !== 0) {
+      setScore(0)
+      setStudySide('')
+      setUserInput('')
+      setMessage('')
+    } else { // add this to total study score
+      setScore(0)
+      setStudySide('')
+      setUserInput('')
+      setMessage('')
+    }
   }
 
   return (
@@ -109,7 +120,7 @@ export const ShortAnswer = () => {
         <div class='modalBackground'>
           <div class='modalContainer'>
 
-            {randomCards.length !== 0 && (
+            {randomCards.length !== 0 && message =='' && (
               <div>
                 <div>
                   <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput} />
@@ -124,17 +135,23 @@ export const ShortAnswer = () => {
                 {showAnswer && randomCards[0].back}
                 <p></p>
                 <h3>Cards remaining: {randomCards.length}</h3>
-                <h3>Score: {score}</h3>                
-                <button onClick={handleFinishStudy}>Finish studying</button>
+                <h3>Score: {score}</h3>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
               </div>
             )}
 
-            {randomCards.length == 0 && (
-              <div>
-                <h2>You scored {score} / {total}</h2>
-                <button onClick={handleFinishStudy}>Finish studying</button>
-              </div>
-            )}
+            <ConfirmComplete
+              message={message}
+              setMessage={setMessage}
+              handleFinishStudy={handleFinishStudy} />
+
+
+            <Results
+              randomCards={randomCards}
+              score={score}
+              total={total}
+              handleFinishStudy={handleFinishStudy}
+            />
           </div>
         </div>
       )}
@@ -157,15 +174,21 @@ export const ShortAnswer = () => {
                 <p></p>
                 <h3>Cards remaining: {randomCards.length}</h3>
                 <h3>Score: {score}</h3>
-                <button onClick={handleFinishStudy}>Finish studying</button>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
               </div>)}
 
-            {randomCards.length == 0 && (
-              <div>
-                <h2>You scored {score} / {total}</h2>
-                <button onClick={handleFinishStudy}>Finish studying</button>
-              </div>
-            )}
+            <ConfirmComplete
+              message={message}
+              setMessage={setMessage}
+              handleFinishStudy={handleFinishStudy} />
+
+
+            <Results
+              randomCards={randomCards}
+              score={score}
+              total={total}
+              handleFinishStudy={handleFinishStudy}
+            />
           </div>
         </div>
       )}

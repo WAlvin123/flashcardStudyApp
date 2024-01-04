@@ -5,6 +5,8 @@ import { useDeckState } from "../components/useDeckState"
 import { useState, useEffect } from "react"
 import "./Modal.css"
 import { PreStudyInput } from "../components/PrestudyInput";
+import { ConfirmComplete } from "../components/ConfirmComplete";
+import { Results } from "../components/Results";
 
 export const MultipleChoice = () => {
   const [decks, setDecks] = useDeckState()
@@ -18,6 +20,7 @@ export const MultipleChoice = () => {
   const [answerMessage, setAnswerMessage] = useState('')
   const [selectedOption, setSelectedOption] = useState('------')
   const [total, setTotal] = useState(0)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -89,12 +92,14 @@ export const MultipleChoice = () => {
         setRandomCards(randomCards.filter((card) => {
           return card.back !== choice
         }))
+        setChoice('')
         setAnswerMessage('Correct')
         handleMC(randomCards[1])
       } else if (randomCards[0].back == choice && wrong == true) {
         setRandomCards(randomCards.filter((card) => {
           return card.back !== choice
         }))
+        setChoice('')
         setAnswerMessage('Correct')
         handleMC(randomCards[1])
         setWrong(false)
@@ -110,6 +115,7 @@ export const MultipleChoice = () => {
           return card.front !== choice
         }))
         handleMC(randomCards[1])
+        setChoice('')
         setAnswerMessage('Correct')
         setScore(score + 1)
       } else if (randomCards[0].front == choice && wrong == true) {
@@ -118,6 +124,7 @@ export const MultipleChoice = () => {
         }))
         handleMC(randomCards[1])
         setWrong(false)
+        setChoice('')
         setAnswerMessage('Correct')
       } else if (randomCards[0].front !== choice && wrong == false) {
         setWrong(true)
@@ -127,10 +134,21 @@ export const MultipleChoice = () => {
   }
 
   const handleFinishStudy = () => {
-    setWrong(false)
-    setStudySide('')
-    setAnswerMessage('')
-    setScore(0)
+    if (randomCards.length !== 0) {
+      setWrong(false)
+      setStudySide('')
+      setAnswerMessage('')
+      setScore(0)
+      setMessage('')
+      setChoice('')
+    } else { // add this to total study score
+      setWrong(false)
+      setStudySide('')
+      setAnswerMessage('')
+      setScore(0)
+      setMessage('')
+      setChoice('')
+    }
   }
 
   return (
@@ -138,33 +156,41 @@ export const MultipleChoice = () => {
       {studySide == 'front' && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            {randomCards.length !== 0 && (
+            {randomCards.length !== 0 && message == '' && (
               <div>
-                <h2>{randomCards[0].front}</h2>
+                <p style={{ fontSize: 20 }}>{randomCards[0].front}</p>
                 <div>
                   {multipleChoice.map((choice) => {
                     return (
-                      <button onClick={() => { setChoice(choice.back) }}>
+                      <button onClick={() => {
+                        setChoice(choice.back)
+                        setAnswerMessage('')
+                      }}>
                         {choice.back}
                       </button>
                     )
                   })}
                 </div>
-                <p>Selected choice: {choice}</p>
+                {choice !== '' && (<p>Selected choice: {choice}</p>)}
                 <h3>Cards remaining: {randomCards.length}</h3>
                 <h3>Score: {score}</h3>
                 <p>{answerMessage}</p>
                 <button onClick={handleCheckAnswer}>Check Answer</button>
-                <button onClick={handleFinishStudy}>Finish studying</button>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
               </div>
             )}
 
-            {randomCards.length == 0 && (
-              <div>
-                <h2>You scored {score} / {total}</h2>
-                <button onClick={handleFinishStudy}>Finish studying</button>
-              </div>
-            )}
+            <ConfirmComplete
+              message={message}
+              setMessage={setMessage}
+              handleFinishStudy={handleFinishStudy} />
+
+            <Results
+              randomCards={randomCards}
+              score={score}
+              total={total}
+              handleFinishStudy={handleFinishStudy}
+            />
           </div>
         </div>
       )}
@@ -172,34 +198,46 @@ export const MultipleChoice = () => {
       {studySide == 'back' && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            {randomCards.length !== 0 && (
+            {randomCards.length !== 0 && message == '' && (
               <div>
-                {randomCards[0].back}
+                <p style={{ fontSize: 20 }}>{randomCards[0].back}</p>
                 <div>
                   {multipleChoice.map((choice) => {
                     return (
-                      <button onClick={() => { setChoice(choice.front) }}>
+                      <button onClick={() => {
+                        setChoice(choice.front)
+                        setAnswerMessage('')
+                      }}>
                         {choice.front}
                       </button>
                     )
                   })}
                 </div>
-                <h2>Score: {score}</h2>
-                <h2>{answerMessage}</h2>
+                {choice !== '' && (<p>Selected choice: {choice}</p>)}
+                <h3>Cards remaining: {randomCards.length}</h3>
+                <h3>Score: {score}</h3>
+                <p>{answerMessage}</p>
                 <button onClick={handleCheckAnswer}>Check Answer</button>
-                <button onClick={handleFinishStudy}>Finish studying</button>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
               </div>
             )}
 
-            {randomCards.length == 0 && (
-              <div>
-                <h2>You scored {score} / {total}</h2>
-                <button onClick={handleFinishStudy}>Finish studying</button>
-              </div>
-            )}
+            <ConfirmComplete
+              message={message}
+              setMessage={setMessage}
+              handleFinishStudy={handleFinishStudy} />
+
+
+            <Results
+              randomCards={randomCards}
+              score={score}
+              total={total}
+              handleFinishStudy={handleFinishStudy}
+            />
           </div>
         </div>
       )}
+
       <PreStudyInput
         guideMessage={
           <p>

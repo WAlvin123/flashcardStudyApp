@@ -3,10 +3,12 @@ import * as yup from 'yup';
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDeckState } from "../components/useDeckState";
+import { ConfirmComplete } from "../components/ConfirmComplete";
+import { Results } from "../components/Results";
 
 export const Matching = () => {
   const [decks, setDecks] = useDeckState()
-  const [columnOne, setColumnOne] = useState()
+  const [randomCards, setRandomCards] = useState()
   const [columnTwo, setColumnTwo] = useState()
   const [filteredDeck, setFilteredDeck] = useState({ cards: ['initial state'] })
   const [modalState, setModalState] = useState(false)
@@ -18,6 +20,7 @@ export const Matching = () => {
   const [selectedOption, setSelectedOption] = useState('------')
   const [total, setTotal] = useState(0)
   const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -60,7 +63,7 @@ export const Matching = () => {
             smallerArray.push(filteredDeck.cards[random])
           }
         }
-        setColumnOne([...smallerArray].map((item) => { return { ...item, column: 1 } }))
+        setRandomCards([...smallerArray].map((item) => { return { ...item, column: 1 } }))
         const newArray = [...smallerArray]
         newArray.sort(() => Math.random() - 0.5)
         setColumnTwo([...newArray].map((item) => { return { ...item, column: 2 } }))
@@ -92,7 +95,7 @@ export const Matching = () => {
 
   const handleCheckAnswer = () => {
     if (choiceOne.id == choiceTwo.id && choiceOne !== '' && choiceTwo !== '') {
-      setColumnOne(columnOne.filter((item) => item.id !== choiceOne.id))
+      setRandomCards(randomCards.filter((item) => item.id !== choiceOne.id))
       setColumnTwo(columnTwo.filter((item) => item.id !== choiceOne.id))
       setChoiceOne('')
       setChoiceTwo('')
@@ -119,12 +122,25 @@ export const Matching = () => {
   }
 
   const handleFinishStudy = () => {
-    setScore(0)
-    setModalState(false)
-    setAnswerMessage('')
-    setChoiceOne('')
-    setChoiceTwo('')
-    setAnswerMessage('')
+    if (randomCards.length !== 0) {
+      setScore(0)
+      setModalState(false)
+      setAnswerMessage('')
+      setChoiceOne('')
+      setChoiceTwo('')
+      setAnswerMessage('')
+      setMessage('')
+      console.log('score not added')
+    } else {
+      setScore(0)
+      setModalState(false)
+      setAnswerMessage('')
+      setChoiceOne('')
+      setChoiceTwo('')
+      setAnswerMessage('')
+      setMessage('')
+      console.log('score added')
+    }
   }
 
   return (
@@ -132,9 +148,10 @@ export const Matching = () => {
       {modalState == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            {columnOne.length !== 0 && (
+            {randomCards.length !== 0 && message == '' && (
               <div>
-                <div className='decks-table' style={{ display: 'flex', justifyContent: "center" }}>
+                {(choiceOne !== '' || choiceTwo !== '') && (
+                  <div className='decks-table' style={{ display: 'flex', justifyContent: "center", paddingBottom:'20px', paddingTop:'20px'}}>
                   <table style={{ backgroundColor: "black", color: 'white' }}>
                     <th width='200px'>Front</th>
                     <th width='200px'>Back</th>
@@ -144,13 +161,15 @@ export const Matching = () => {
                     </tr>
                   </table>
                   <button onClick={handleCheckAnswer}>Check Answer</button>
-
                 </div>
+        
+                )}
+
                 <h2>{answerMessage}</h2>
                 <h2>Score: {score}</h2>
                 <div class='column-container'>
                   <div>
-                    {columnOne.map((card) => {
+                    {randomCards.map((card) => {
                       return (
                         <div>
                           <button onClick={() => { handleChoice(card, card.column) }}>
@@ -173,20 +192,25 @@ export const Matching = () => {
                   </div>
                 </div>
                 <h2></h2>
-                <button onClick={handleFinishStudy}>Finish studying</button>
+                <button onClick={() => {setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.")}}>Finish studying</button>
               </div>
             )}
 
-            {columnOne.length == 0 && (
-              <div>
-                <h2>You scored {score} / {total}</h2>
-                <button onClick={handleFinishStudy}>Finish studying</button>
-              </div>
-            )}
+            <ConfirmComplete
+              message={message}
+              setMessage={setMessage}
+              handleFinishStudy={handleFinishStudy} />
+
+            <Results
+              randomCards={randomCards}
+              score={score}
+              total={total}
+              handleFinishStudy={handleFinishStudy}
+            />
           </div>
         </div>
       )}
-      
+
       <div class='study-options'>
         <h2>Select the deck you would like to study from</h2>
         <p>Guide: Match the front with the correct opposite side of the card</p>
