@@ -24,17 +24,23 @@ export const Home = () => {
 
   return (
     <div>
-      <p style={{fontSize:40}}>Select a study method</p>
-    <div className="centered-container">
-      <div className="study-select">
-          <Link to={'/simple'} style={{fontSize:25}}>SIMPLE STUDY</Link>
-          <Link to={'/matching'} style={{fontSize:25}}>MATCHING</Link>
-          <Link to={'/multiplechoice'} style={{fontSize:25}}>MULTIPLE CHOICE</Link>
-          <Link to={'/shortanswer'} style={{fontSize:25}}>SHORT ANSWER</Link>
+      <p style={{ fontSize: 40 }}>Select a study method</p>
+      <div className="centered-container">
+          <table>
+
+            <th style={{paddingRight: '15px'}}>
+            <Link to={'/simple'} style={{ fontSize: 25 }}>SIMPLE STUDY</Link>
+            <td><Link to={'/matching'} style={{ fontSize: 25 }}>MATCHING</Link></td>
+            </th>
+
+            <th>          
+              <Link to={'/multiplechoice'} style={{ fontSize: 25 }}>MULTIPLE CHOICE</Link>
+              <td><Link to={'/shortanswer'} style={{ fontSize: 25 }}>SHORT ANSWER</Link></td>
+            </th>
+          </table>
       </div>
-    </div>
-    <h1>______________________________________FILLER DIVIDER_________________________________________</h1>
-    <h1>
+      <h1>______________________________________FILLER DIVIDER_________________________________________</h1>
+      <h1>
         Total decks: {decks.length}
       </h1>
       <h1>
