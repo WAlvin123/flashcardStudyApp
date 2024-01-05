@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
+import { Link } from "react-router-dom";
 import "./Home.css"
 
 export const Home = () => {
@@ -23,19 +24,22 @@ export const Home = () => {
 
   return (
     <div>
-      <h2>Home</h2>
-      <p>A simple flashcard study application where you can choose between <br />
-        multiple choice, matching the two sides of the card, and short answer. <br />
-      </p>
-      <h1>
+      <p style={{fontSize:40}}>Select a study method</p>
+    <div className="centered-container">
+      <div className="study-select">
+          <Link to={'/simple'} style={{fontSize:25}}>SIMPLE STUDY</Link>
+          <Link to={'/matching'} style={{fontSize:25}}>MATCHING</Link>
+          <Link to={'/multiplechoice'} style={{fontSize:25}}>MULTIPLE CHOICE</Link>
+          <Link to={'/shortanswer'} style={{fontSize:25}}>SHORT ANSWER</Link>
+      </div>
+    </div>
+    <h1>______________________________________FILLER DIVIDER_________________________________________</h1>
+    <h1>
         Total decks: {decks.length}
       </h1>
       <h1>
         Total cards: {totalCards}
       </h1>
-      <p>
-        W.I.P user stats
-      </p>
     </div>
   )
 }

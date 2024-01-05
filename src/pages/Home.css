@@ -25,3 +25,16 @@
   display: flex;
   flex-direction: column;
 }
+
+.centered-container {
+  display:flex;
+  justify-content: center;
+}
+
+.study-select {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 30%;
+  margin-bottom: 10px; 
+}
