@@ -3,7 +3,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDeckState } from "../components/useDeckState"
 import { useState, useEffect } from "react"
-import "./Modal.css"
+import "../styles/Modal.css"
 import { PreStudyInput } from "../components/PrestudyInput";
 import { ConfirmComplete } from "../components/ConfirmComplete";
 import { Results } from "../components/Results";

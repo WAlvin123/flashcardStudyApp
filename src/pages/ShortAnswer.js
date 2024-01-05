@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 import { PreStudyInput } from "../components/PrestudyInput"
 import { ConfirmComplete } from "../components/ConfirmComplete"
 import { Results } from "../components/Results"
+import "../styles/Modal.css"
 
 export const ShortAnswer = () => {
   const [decks, setDecks] = useDeckState()
@@ -120,7 +121,7 @@ export const ShortAnswer = () => {
         <div class='modalBackground'>
           <div class='modalContainer'>
 
-            {randomCards.length !== 0 && message =='' && (
+            {randomCards.length !== 0 && message == '' && (
               <div>
                 <div>
                   <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput} />
@@ -181,7 +182,6 @@ export const ShortAnswer = () => {
               message={message}
               setMessage={setMessage}
               handleFinishStudy={handleFinishStudy} />
-
 
             <Results
               randomCards={randomCards}

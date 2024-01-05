@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
 import { Link } from "react-router-dom";
-import "./Home.css"
+import "../styles/Home.css"
 
 export const Home = () => {
   const [totalCards, setTotalCards] = useState(0)

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
-import "./Home.css"
+import "../styles/Home.css"
 
 export const Decks = () => {
   useEffect(() => {

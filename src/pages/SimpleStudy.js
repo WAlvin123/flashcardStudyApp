@@ -6,6 +6,8 @@ import { useDeckState } from "../components/useDeckState";
 import { PreStudyInput } from '../components/PrestudyInput';
 import { Results } from '../components/Results';
 import { ConfirmComplete } from '../components/ConfirmComplete';
+import "../styles/Modal.css"
+
 
 export const SimpleStudy = () => {
   useEffect(() => {
@@ -168,7 +170,7 @@ export const SimpleStudy = () => {
                 )}
                 <h3>Cards remaining: {randomCards.length}</h3>
                 <h2>Score: {score}</h2>
-                <button onClick={ () => {setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.")}}>Finish studying</button>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
               </div>
             )}
 
