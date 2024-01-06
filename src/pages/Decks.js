@@ -19,19 +19,29 @@ export const Decks = () => {
   const [combineState, setCombineState] = useState(0)
   const [mainDeck, setMainDeck] = useState({})
   const [subDeck, setSubDeck] = useState({})
-
+  const [duplicateMessage, setDuplicateMessage] = useState('')
 
   const createDeck = () => {
-    const newDeck = {
-      name: inputValue,
-      cards: [],
-      id: decks.length == 0 || decks[decks.length - 1].id + 1,
-      column: 0
+    const deckNames = decks.map(deck => { return deck.name })
+
+    if (deckNames.includes(inputValue)) {
+      setDuplicateMessage(`A deck with the same name already exists`)
+    } else if (inputValue !== '') {
+      const newDeck = {
+        name: inputValue,
+        cards: [],
+        id: decks.length == 0 || decks[decks.length - 1].id + 1,
+        column: 0
+      }
+      const updatedDecks = [...decks, newDeck]
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+      setDecks(updatedDecks)
+      setInputValue('')
+      setDuplicateMessage('')
+    } else {
+      setDuplicateMessage('')
+
     }
-    const updatedDecks = [...decks, newDeck]
-    localStorage.setItem('decks', JSON.stringify(updatedDecks))
-    setDecks(updatedDecks)
-    setInputValue('')
   }
 
   const removeDeck = (id) => {
@@ -46,7 +56,11 @@ export const Decks = () => {
   }
 
   const completeEdit = () => {
-    if (editDeckName !== '') {
+    const deckNames = decks.map(deck => { return deck.name })
+
+    if (deckNames.includes(editDeckName)) {
+      setDuplicateMessage('A deck with the same name already exists')
+    } else if (editDeckName !== '') {
       setDecks(prevDecks => {
         const updatedDecks = prevDecks.map(deck => {
           if (deck.id == editDeck.id) {
@@ -57,8 +71,11 @@ export const Decks = () => {
         localStorage.setItem('decks', JSON.stringify(updatedDecks))
         return updatedDecks
       })
+      setDuplicateMessage('')
     } else {
       setEditDecksVisible(false)
+      setDuplicateMessage('')
+
     }
   }
 
@@ -96,6 +113,7 @@ export const Decks = () => {
             <p>{editDeck.name}</p>
             <input placeholder="New deck name..." onChange={(event) => setEditDeckName(event.target.value)} />
             <button onClick={completeEdit}>Submit edit</button>
+            <p>{duplicateMessage}</p>
           </div>
         </div>
       )}
@@ -107,6 +125,7 @@ export const Decks = () => {
             <div>
               <input onChange={(event) => { setInputValue(event.target.value) }} value={inputValue} />
               <button onClick={createDeck}>Create</button>
+              <p>{duplicateMessage}</p>
             </div>
             <h2>Decks</h2>
 

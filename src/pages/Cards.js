@@ -223,7 +223,6 @@ export const Cards = () => {
           if (event.target.value !== '------') {
             handleChange(event.target.value)
             setIsItemsVisible(true)
-            console.log(filteredDeck)
           } else {
             setIsItemsVisible(false)
           }

@@ -106,6 +106,8 @@ export const MultipleChoice = () => {
       } else if (randomCards[0].back !== choice && wrong == false) {
         setWrong(true)
         setAnswerMessage('Incorrect')
+      } else if (randomCards[0].back !== choice && wrong == true) {
+        setAnswerMessage('Incorrect')
       }
 
     } else if (studySide == 'back') {
@@ -128,6 +130,8 @@ export const MultipleChoice = () => {
         setAnswerMessage('Correct')
       } else if (randomCards[0].front !== choice && wrong == false) {
         setWrong(true)
+        setAnswerMessage('Incorrect')
+      } else if (randomCards[0].front !== choice && wrong == true) {
         setAnswerMessage('Incorrect')
       }
     }
