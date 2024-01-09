@@ -21,6 +21,7 @@ export const MultipleChoice = () => {
   const [selectedOption, setSelectedOption] = useState('------')
   const [total, setTotal] = useState(0)
   const [message, setMessage] = useState('')
+  const [answeredCards, setAnsweredCards] = useState([])
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -89,6 +90,7 @@ export const MultipleChoice = () => {
     if (studySide == 'front') {
       if (randomCards[0].back == choice && wrong == false) {
         setScore(score + 1)
+        setAnsweredCards(prevAnsweredCards => [{ ...randomCards[0], attempt: 0 }, ...prevAnsweredCards])
         setRandomCards(randomCards.filter((card) => {
           return card.back !== choice
         }))
@@ -96,6 +98,8 @@ export const MultipleChoice = () => {
         setAnswerMessage('Correct')
         handleMC(randomCards[1])
       } else if (randomCards[0].back == choice && wrong == true) {
+        setAnsweredCards(prevAnsweredCards => [randomCards[0], ...prevAnsweredCards])
+        console.log(answeredCards)
         setRandomCards(randomCards.filter((card) => {
           return card.back !== choice
         }))
@@ -106,13 +110,38 @@ export const MultipleChoice = () => {
       } else if (randomCards[0].back !== choice && wrong == false) {
         setWrong(true)
         setAnswerMessage('Incorrect')
+        setRandomCards(prevRandom => {
+          const updatedRandomCards = prevRandom.map((card, index) => {
+            if (index == 0) {
+              return { ...card, attempt: (card.attempt || 0) + 1 }
+            } else {
+              return card
+            }
+          })
+          return updatedRandomCards
+        })
       } else if (randomCards[0].back !== choice && wrong == true) {
         setAnswerMessage('Incorrect')
+        setRandomCards(prevRandom => {
+          const updatedRandomCards = prevRandom.map((card, index) => {
+            if (index == 0) {
+              return { ...card, attempt: (card.attempt || 0) + 1 }
+            } else {
+              return card
+            }
+          })
+          return updatedRandomCards
+        })
+
+        console.log(randomCards)
       }
 
     } else if (studySide == 'back') {
       if (randomCards[0].front == choice) {
-        console.log('correct')
+        setAnsweredCards(prevAnsweredCards => {
+          const updatedRandomCards = [{ ...randomCards[0], attempt: 0 }, ...prevAnsweredCards]
+          return updatedRandomCards
+        })
         setRandomCards(randomCards.filter((card) => {
           return card.front !== choice
         }))
@@ -120,7 +149,12 @@ export const MultipleChoice = () => {
         setChoice('')
         setAnswerMessage('Correct')
         setScore(score + 1)
+        console.log('option 2')
       } else if (randomCards[0].front == choice && wrong == true) {
+        setAnsweredCards(prevAnsweredCards => {
+          const updatedRandomCards = [randomCards[0], ...prevAnsweredCards]
+          return updatedRandomCards
+        })
         setRandomCards(randomCards.filter((card) => {
           return card.back !== choice
         }))
@@ -131,7 +165,27 @@ export const MultipleChoice = () => {
       } else if (randomCards[0].front !== choice && wrong == false) {
         setWrong(true)
         setAnswerMessage('Incorrect')
+        setRandomCards(prevRandom => {
+          const updatedRandomCards = prevRandom.map((card, index) => {
+            if (index == 0) {
+              return { ...card, attempt: (card.attempt || 0) + 1 }
+            } else {
+              return card
+            }
+          })
+          return updatedRandomCards
+        })
       } else if (randomCards[0].front !== choice && wrong == true) {
+        setRandomCards(prevRandom => {
+          const updatedRandomCards = prevRandom.map((card, index) => {
+            if (index == 0) {
+              return { ...card, attempt: (card.attempt || 0) + 1 }
+            } else {
+              return card
+            }
+          })
+          return updatedRandomCards
+        })
         setAnswerMessage('Incorrect')
       }
     }
@@ -145,6 +199,7 @@ export const MultipleChoice = () => {
       setScore(0)
       setMessage('')
       setChoice('')
+      setAnsweredCards([])
     } else { // add this to total study score
       setWrong(false)
       setStudySide('')
@@ -152,6 +207,7 @@ export const MultipleChoice = () => {
       setScore(0)
       setMessage('')
       setChoice('')
+      setAnsweredCards([])
     }
   }
 
@@ -175,6 +231,7 @@ export const MultipleChoice = () => {
                     )
                   })}
                 </div>
+
                 {choice !== '' && (<p>Selected choice: {choice}</p>)}
                 <h3>Cards remaining: {randomCards.length}</h3>
                 <h3>Score: {score}</h3>
@@ -194,6 +251,7 @@ export const MultipleChoice = () => {
               score={score}
               total={total}
               handleFinishStudy={handleFinishStudy}
+              answeredCards={answeredCards}
             />
           </div>
         </div>
@@ -237,6 +295,7 @@ export const MultipleChoice = () => {
               score={score}
               total={total}
               handleFinishStudy={handleFinishStudy}
+              answeredCards={answeredCards}
             />
           </div>
         </div>
