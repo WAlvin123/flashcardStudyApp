@@ -243,6 +243,7 @@ export const MultipleChoice = () => {
       )}
 
       <PreStudyInput
+        title={<h1>Multiple Choice</h1>}
         guideMessage={
           <p>
             Guide: Select the right option corresponding <br />

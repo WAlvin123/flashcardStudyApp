@@ -29,22 +29,22 @@ export const Home = () => {
       <div className="centered-container">
           <table>
             <th>
-            <button className='bg-button' onClick={() => {navigate('/simple')}}>
+            <button className='study-button' onClick={() => {navigate('/simple')}}>
               SIMPLE STUDY
             </button>
             <td>
-              <button className='bg-button' onClick={() => {navigate('/matching')}}>
+              <button className='study-button' onClick={() => {navigate('/matching')}}>
                 MATCHING
               </button>
               </td>
             </th>
 
             <th>  
-              <button className='bg-button' onClick={() => {navigate('/multiplechoice')}}>  
-              MULTIPLE CHOICE    
+              <button className='study-button' onClick={() => {navigate('/multiplechoice')}}>  
+                MULTIPLE CHOICE    
               </button>  
               <td>
-                <button className='bg-button' onClick={() => {navigate('/shortanswer')}}>
+                <button className='study-button' onClick={() => {navigate('/shortanswer')}}>
                   SHORT ANSWER
                 </button>
                 </td>

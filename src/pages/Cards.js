@@ -54,7 +54,7 @@ export const Cards = () => {
           front: submission.front,
           back: submission.back,
           deck: submission.deck,
-          id: selectedDeck.cards.length == 0 || selectedDeck.cards[selectedDeck.cards.length - 1].id + 1
+          id: selectedDeck.cards.length == 0 || selectedDeck.cards[selectedDeck.cards.length - 1].id + 1,
         }
         setDecks(prevDecks => {
           const updatedDecks = prevDecks.map((deck) => {

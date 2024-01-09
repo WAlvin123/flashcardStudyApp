@@ -212,6 +212,7 @@ export const Matching = () => {
       )}
 
       <div class='study-options'>
+        <h1>Matching</h1>
         <h2>Select the deck you would like to study from</h2>
         <p>Guide: Match the front with the correct opposite side of the card</p>
         <select onChange={(event) => {

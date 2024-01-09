@@ -193,6 +193,7 @@ export const ShortAnswer = () => {
         </div>
       )}
       <PreStudyInput
+        title={<h1>Short Answer</h1>}
         guideMessage={
           <p>
             Guide: Enter the corresponding side of the card

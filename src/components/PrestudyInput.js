@@ -1,8 +1,9 @@
-export const PreStudyInput = ({ handleSelect, setSelectedOption, selectedOption, decks, filteredDeck, handleSubmit, onSubmit, register, errors, guideMessage }) => {
+export const PreStudyInput = ({ title, handleSelect, setSelectedOption, selectedOption, decks, filteredDeck, handleSubmit, onSubmit, register, errors, guideMessage }) => {
   return (
     <div class='study-options'>
+      {title}
       <h2>Select the deck you would like to study from</h2>
-      <p class='guide'>{guideMessage}</p>
+      {guideMessage}
       <select onChange={(event) => {
         handleSelect(event.target.value)
         setSelectedOption(event.target.value)

@@ -20,6 +20,7 @@ export const SimpleStudy = () => {
   const [decks, setDecks] = useDeckState()
   const [filteredDeck, setFilteredDeck] = useState({ cards: [] })
   const [randomCards, setRandomCards] = useState([])
+  const [answeredCards, setAnsweredCards] = useState([])
   const [modalState, setModalState] = useState(false)
   const [answerState, setAnswerState] = useState(0)
   const [score, setScore] = useState(0)
@@ -68,29 +69,32 @@ export const SimpleStudy = () => {
   }
 
   const handleGood = () => {
-    setRandomCards(prevRandom => {
-      const updatedCards = prevRandom.filter((card, index) => {
-        if (card.firstTry == undefined && index == 0) {
-          setScore(score + 1)
-          return false
-        } else if (card.firstTry == false && index == 0) {
-          return false
-        } else {
-          return true
-        }
-      })
-      setAnswerState(0)
-      return updatedCards
+    const copiedRandomCards = [...randomCards]
+
+    randomCards.forEach((card, index) => {
+      if (card.firstTry == undefined && index == 0) {
+        setAnsweredCards(prevAnsweredCards => [{...copiedRandomCards[0], attempt:0}, ...prevAnsweredCards])
+        randomCards.splice(0, 1)
+        setScore(score + 1)
+        return false
+      } else if (card.firstTry == false && index == 0) {
+        setAnsweredCards(prevAnsweredCards => [copiedRandomCards[0], ...prevAnsweredCards])
+        randomCards.splice(0, 1)
+        return false
+      }
     })
+
+    setAnswerState(0)
   }
 
   const handleBad = () => {
     setRandomCards(prevRandom => {
-      const firstCard = { ...prevRandom[0], firstTry: false }
+      const firstCard = { ...prevRandom[0], firstTry: false, attempt: (prevRandom[0].attempt || 0) + 1  }
       const remainingCards = prevRandom.slice(1)
       remainingCards.sort(() => Math.random() - 0.5)
       const updatedRandomCards = [...remainingCards, firstCard]
       setAnswerState(0)
+      console.log(updatedRandomCards)
       return updatedRandomCards
     })
   }
@@ -101,11 +105,13 @@ export const SimpleStudy = () => {
       setScore(0)
       setAnswerState(0)
       setMessage('')
+      setAnsweredCards([])
     } else { // add this to total study score
       setModalState(false)
       setScore(0)
       setAnswerState(0)
       setMessage('')
+      setAnsweredCards([])
     }
   }
 
@@ -131,6 +137,14 @@ export const SimpleStudy = () => {
                 )}
                 <h3>Cards remaining: {randomCards.length}</h3>
                 <h3>Score: {score}</h3>
+                {answeredCards.map(card => {
+                  return (
+                    <div>
+                      {card.front}
+                      {card.attempts}
+                    </div>
+                  )
+                })}
                 <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
               </div>
             )}
@@ -145,6 +159,7 @@ export const SimpleStudy = () => {
               score={score}
               total={total}
               handleFinishStudy={handleFinishStudy}
+              answeredCards={answeredCards}
             />
           </div>
         </div>
@@ -184,12 +199,14 @@ export const SimpleStudy = () => {
               score={score}
               total={total}
               handleFinishStudy={handleFinishStudy}
+              answeredCards={answeredCards}
             />
           </div>
         </div>
       )}
 
       <PreStudyInput
+        title={<h1>Simple</h1>}
         guideMessage={
           <p>
             Guide: Simple memorization. If the card is not memorized <br />
