@@ -3,6 +3,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
+import '../styles/Cards.css'
 
 export const Cards = () => {
   useEffect(() => {

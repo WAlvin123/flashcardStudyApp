@@ -206,11 +206,11 @@ export const SimpleStudy = () => {
       )}
 
       <PreStudyInput
-        title={<h1>Simple</h1>}
+        title={<h1>Memorization</h1>}
         guideMessage={
           <p>
-            Guide: Simple memorization. If the card is not memorized <br />
-            it will be pushed to the back of the study set
+            Guide: If the card is not memorized it will be pushed to the<br />
+            back of the study set to be answered again later
           </p>
         }
         handleSelect={handleSelect}

@@ -66,7 +66,14 @@ export const Import = () => {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+    <div className='import'>
+      <div>
+        <h2 style={{ paddingTop: '20px' }}>Save and export deck into a txt file</h2>
+        <div>
+          <input onChange={event => { setDeckName(event.target.value) }} />
+          <button onClick={handleFileSave}>Export Deck</button>
+        </div>
+      </div>
       <div>
         <h2 style={{ paddingTop: '20px' }}>Import deck through txt</h2>
         <p>Note: Decks with the same name will be combined <br />
@@ -75,13 +82,6 @@ export const Import = () => {
         <h2>
           {loadCompleteMessage}
         </h2>
-      </div>
-      <div>
-        <h2 style={{ paddingTop: '20px' }}>Save and export deck into a txt file</h2>
-        <div>
-          <input onChange={event => { setDeckName(event.target.value) }} />
-          <button onClick={handleFileSave}>Export Deck</button>
-        </div>
       </div>
     </div>
   )

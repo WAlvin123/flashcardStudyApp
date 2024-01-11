@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import '../styles/Navbar.css'
 
 export const Navbar = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="navbar">
-      <Link to={'/'} style={{color:'white', textDecoration:'none', fontSize:20}}>Home</Link>
-      <Link to={'/decks'} style={{color:'white', textDecoration:'none', fontSize:20}}>Decks</Link>
-      <Link to={'/cards'} style={{color:'white', textDecoration:'none', fontSize:20}}>Cards</Link>
-      <Link to={'/importdeck'} style={{color:'white', textDecoration:'none', fontSize:20}}>Import / Export Decks</Link>
+    <h1>Flash card App</h1>
+      <button className="link" onClick={() => {navigate('/')}}>Home</button>
+      <button className="link" onClick={() => {navigate('decks')}}>Decks</button>
+      <button className="link" onClick={() => {navigate('cards')}}>Cards</button>
+      <button className="link" onClick={() => {navigate('/importdeck')}}>Import / Export</button>
     </div>
   )
 }

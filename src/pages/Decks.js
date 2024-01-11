@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
-import "../styles/Home.css"
+import '../styles/Decks.css'
 
 export const Decks = () => {
   useEffect(() => {
@@ -106,7 +106,7 @@ export const Decks = () => {
   }
 
   return (
-    <div>
+    <div className="total">
       {editDecksVisible == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
@@ -118,8 +118,6 @@ export const Decks = () => {
         </div>
       )}
 
-      <div>
-        <div class='container'>
           <div class='decks'>
             <h2>Create Deck</h2>
             <div>
@@ -195,8 +193,6 @@ export const Decks = () => {
               })}
             </table>
           </div>
-        </div>
       </div>
-    </div>
   )
 }

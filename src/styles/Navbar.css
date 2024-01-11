@@ -1,0 +1,26 @@
+.navbar {
+  display: flex;
+  justify-content:space-between;
+  background-color: black;
+  padding-left: 300px;
+  padding-right: 300px;
+  padding-bottom: 10px;
+}
+
+.title {
+  color: black;
+  background-color: black;
+}
+
+.link {
+  color: rgb(100, 191, 248);
+    background-color: transparent;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: lightblue;
+}
+

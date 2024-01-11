@@ -21,6 +21,7 @@ export const Matching = () => {
   const [total, setTotal] = useState(0)
   const [errorMessage, setErrorMessage] = useState('')
   const [message, setMessage] = useState('')
+  const [answeredCards, setAnsweredCards] = useState(['test'])
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -74,7 +75,7 @@ export const Matching = () => {
   }
 
   const handleChoice = (card, column) => {
-    if (choiceOne == '' && choiceTwo == '' && column == 1) { //No choice, column 1 first
+    if (choiceOne == '' && choiceTwo == '' && column == 1) { //No choice, column 1 first'
       setChoiceOne(card)
     } else if (choiceOne == '' && choiceTwo == '' && column == 2) { //No choice, column 2 first
       setChoiceTwo(card)
@@ -94,30 +95,42 @@ export const Matching = () => {
   }
 
   const handleCheckAnswer = () => {
+    const indexChoice1 = randomCards.findIndex(card => card.front == choiceOne.front)
     if (choiceOne.id == choiceTwo.id && choiceOne !== '' && choiceTwo !== '') {
+      if (wrong == false) {
+        setAnsweredCards(prevAnswered =>
+          [{ ...randomCards[indexChoice1], attempt: 0 }, ...prevAnswered]
+        )
+        setScore(score + 1)
+      } else {
+        setAnsweredCards(prevAnswered => [randomCards[indexChoice1], ...prevAnswered])
+        setWrong(false)
+      }
       setRandomCards(randomCards.filter((item) => item.id !== choiceOne.id))
       setColumnTwo(columnTwo.filter((item) => item.id !== choiceOne.id))
       setChoiceOne('')
       setChoiceTwo('')
       setAnswerMessage('Correct')
-      if (wrong == false) {
-        setScore(score + 1)
-      } else {
-        setWrong(false)
-      }
     } else if (choiceOne == '' && choiceTwo == '') {
       setAnswerMessage('Select an item')
     } else if (choiceOne == '' && choiceTwo !== '' || choiceOne !== '' && choiceTwo == '') {
       setAnswerMessage('Complete your selection')
     } else {
-      if (wrong == false && score == 0) {
-        setWrong(true)
-      } else if (wrong == false) {
-        setWrong(true)
-      } else if (wrong == true) {
-        setScore(score)
-      }
+      setRandomCards(prevRandom => {
+        const updatedRandomCards = prevRandom.map((card, index) => {
+          if (index == indexChoice1) {
+            return { ...card, attempt: (card.attempt || 0) + 1 }
+          } else {
+            return card
+          }
+        })
+        return updatedRandomCards
+      })
+      console.log(randomCards)
+      console.log(randomCards[indexChoice1])
+      setWrong(true)
       setAnswerMessage('Incorrect')
+      console.log('yes')
     }
   }
 
@@ -130,6 +143,7 @@ export const Matching = () => {
       setChoiceTwo('')
       setAnswerMessage('')
       setMessage('')
+      setAnsweredCards([])
       console.log('score not added')
     } else {
       setScore(0)
@@ -139,6 +153,7 @@ export const Matching = () => {
       setChoiceTwo('')
       setAnswerMessage('')
       setMessage('')
+      setAnsweredCards([])
       console.log('score added')
     }
   }
@@ -151,18 +166,18 @@ export const Matching = () => {
             {randomCards.length !== 0 && message == '' && (
               <div>
                 {(choiceOne !== '' || choiceTwo !== '') && (
-                  <div className='decks-table' style={{ display: 'flex', justifyContent: "center", paddingBottom:'20px', paddingTop:'20px'}}>
-                  <table style={{ backgroundColor: "black", color: 'white' }}>
-                    <th width='200px'>Front</th>
-                    <th width='200px'>Back</th>
-                    <tr style={{ backgroundColor: 'white' }}>
-                      <td style={{ color: "black" }}>{choiceOne.front}</td>
-                      <td style={{ color: "black" }}>{choiceTwo.back}</td>
-                    </tr>
-                  </table>
-                  <button onClick={handleCheckAnswer}>Check Answer</button>
-                </div>
-        
+                  <div className='decks-table' style={{ display: 'flex', justifyContent: "center", paddingBottom: '20px', paddingTop: '20px' }}>
+                    <table style={{ backgroundColor: "black", color: 'white' }}>
+                      <th width='200px'>Front</th>
+                      <th width='200px'>Back</th>
+                      <tr style={{ backgroundColor: 'white' }}>
+                        <td style={{ color: "black" }}>{choiceOne.front}</td>
+                        <td style={{ color: "black" }}>{choiceTwo.back}</td>
+                      </tr>
+                    </table>
+                    <button onClick={handleCheckAnswer}>Check Answer</button>
+                  </div>
+
                 )}
 
                 <h2>{answerMessage}</h2>
@@ -192,20 +207,22 @@ export const Matching = () => {
                   </div>
                 </div>
                 <h2></h2>
-                <button onClick={() => {setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.")}}>Finish studying</button>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
               </div>
             )}
 
             <ConfirmComplete
               message={message}
               setMessage={setMessage}
-              handleFinishStudy={handleFinishStudy} />
+              handleFinishStudy={handleFinishStudy}
+            />
 
             <Results
               randomCards={randomCards}
               score={score}
               total={total}
               handleFinishStudy={handleFinishStudy}
+              answeredCards={answeredCards}
             />
           </div>
         </div>
