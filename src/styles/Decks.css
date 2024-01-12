@@ -1,5 +1,4 @@
 .decks {
-  background-color:rgb(79, 79, 79);
   width:100%;
 }
 
@@ -18,11 +17,11 @@
   background: transparent;
   border: none;
   cursor:pointer;
-  color: rgb(100, 191, 248);
+  color: rgb(255, 128, 0);
 }
 
 .create:hover {
-  color:lightblue;
+  color:rgb(255, 179, 108);
 }
 
 .deck-submit {

@@ -20,29 +20,25 @@ export const Home = () => {
     <div className="selection">
       <p style={{ fontSize: 40 }}>Select a study method</p>
       <div className="centered-container">
-        <table>
-          <th>
+        <div>
+          <div>
             <button className='study-button' onClick={() => { navigate('/memorization') }}>
               MEMORIZATION
             </button>
-            <td>
-              <button className='study-button' onClick={() => { navigate('/matching') }}>
+            <button className='study-button' onClick={() => { navigate('/matching') }}>
                 MATCHING
-              </button>
-            </td>
-          </th>
+            </button>
+          </div>
 
-          <th>
+          <div>
             <button className='study-button' onClick={() => { navigate('/multiplechoice') }}>
               MULTIPLE CHOICE
             </button>
-            <td>
-              <button className='study-button' onClick={() => { navigate('/shortanswer') }}>
+            <button className='study-button' onClick={() => { navigate('/shortanswer') }}>
                 SHORT ANSWER
-              </button>
-            </td>
-          </th>
-        </table>
+            </button>
+          </div>
+        </div>
       </div>
       <h1>Total decks: {decks.length}</h1>
     </div>

@@ -115,9 +115,16 @@ export const Decks = () => {
       {editDecksVisible == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            <p>{editDeck.name}</p>
-            <input placeholder="New deck name..." onChange={(event) => setEditDeckName(event.target.value)} />
-            <button onClick={completeEdit}>Submit edit</button>
+            <p className="header">{editDeck.name}</p>
+            <div>
+            <input placeholder="New deck name..." onChange={(event) => setEditDeckName(event.target.value)} 
+            className="edit"
+            />
+            </div>
+            <button 
+            onClick={completeEdit}
+            className="create"
+            >Submit edit</button>
             <p>{duplicateMessage}</p>
           </div>
         </div>
@@ -131,7 +138,7 @@ export const Decks = () => {
               placeholder="Deck name..."
               onChange={(event) => { setInputValue(event.target.value) }} 
               value={inputValue} 
-              className="text-box"
+              className="text"
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
                   createDeck()
@@ -173,7 +180,7 @@ export const Decks = () => {
               <th className="table-row">Settings</th>
               {decks.map((deck) => {
                 return (
-                  <tr style={{backgroundColor:'gray'}}>
+                  <tr style={{backgroundColor:' RGB(55, 71, 79)'}}>
                     <td className="table-details">{deck.name}</td>
                     <td className="table-details">{deck.cards.length}</td>
                       <div className="settings">

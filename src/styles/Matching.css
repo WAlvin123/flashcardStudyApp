@@ -2,8 +2,9 @@
   cursor:pointer;
   border: none;
   background-color: transparent;
-  color: rgb(100, 191, 248);
+  color: rgb(255, 128, 0);
   font-size: 200%;
+  max-width: 17vw;
 }
 
 .option:hover {
@@ -27,7 +28,7 @@
   padding-bottom: 0.5%;
   background-color: white;
   position: fixed;
-  transform: translateX(-11vw)
+  transform: translate(-13vw, 5vw)
 }
 
 .column-container {
@@ -40,5 +41,5 @@
 
 .user {
   position: fixed;
-  transform: translateY(15vw);
+  transform: translate(-2vw, 14vw);
 }

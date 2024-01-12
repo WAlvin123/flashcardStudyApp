@@ -180,23 +180,26 @@ export const Matching = () => {
                       })}
                     </div>
 
-                    <div style={{display:"flex", flexDirection:'column'}}>
-                    {(choiceOne !== '' || choiceTwo !== '') && (
-                      <div className='matching-table'>
-                        <table style={{ backgroundColor: "black", color: 'rgb(100, 191, 248)' }}>
-                          <th className="matching-table-header">Front</th>
-                          <th className="matching-table-header">Back</th>
-                          <tr style={{ backgroundColor: 'gray' }}>
-                            <td className="matching-table-details">{choiceOne.front}</td>
-                            <td className="matching-table-details">{choiceTwo.back}</td>
-                          </tr>
-                        </table>
-                      </div>
-                    )}
+                    <div style={{ display: "flex", flexDirection: 'column' }}>
+                      {(choiceOne !== '' || choiceTwo !== '') && (
+                        <div className='matching-table'>
+                          <table style={{ backgroundColor: "black", color: 'rgb(100, 191, 248)' }}>
+                            <th className="matching-table-header">Front</th>
+                            <th className="matching-table-header">Back</th>
+                            <tr style={{ backgroundColor: 'gray' }}>
+                              <td className="matching-table-details">{choiceOne.front}</td>
+                              <td className="matching-table-details">{choiceTwo.back}</td>
+                            </tr>
+                          </table>
+                        </div>
+                      )}
                       <div className="user">
-                      <button className='create' onClick={handleCheckAnswer}>Check Answer</button>
-                      <h2 className="header">{answerMessage}</h2>
-                      <h2 className="header">Score: {score}</h2>
+                        <button className='create' onClick={handleCheckAnswer}>Check Answer</button>
+                        <h2 className="header">{answerMessage}</h2>
+                        <h2 className="header">Score: {score}</h2>
+                        <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}
+                  className="create"
+                >Finish studying</button>
                       </div>
                     </div>
 
@@ -214,9 +217,6 @@ export const Matching = () => {
                   </div>
                   <h2></h2>
                 </div>
-                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}
-                    className="create"
-                  >Finish studying</button>
               </div>
             )}
 
@@ -248,7 +248,7 @@ export const Matching = () => {
         <select onChange={(event) => {
           handleSelect(event.target.value)
         }}
-          style={{ fontSize: '180%' }}
+          className="text"
         >
           <option>------</option>
           {decks.map((decks) => {
@@ -267,10 +267,10 @@ export const Matching = () => {
               <input
                 {...register('studyAmount')}
                 onChange={() => { setErrorMessage('') }}
-                style={{ fontSize: '180%' }}
+                className="text"
               />
               <input
-                style={{ fontSize: '180%' }}
+                className="text"
                 type='submit' />
             </form>
             <p>

@@ -7,7 +7,8 @@ export const PreStudyInput = ({ title, handleSelect, setSelectedOption, selected
       <select onChange={(event) => {
         handleSelect(event.target.value)
         setSelectedOption(event.target.value)
-      }} style={{ fontSize: '150%' }}>
+      }}
+        className="text">
         <option>------</option>
         {decks.map((decks) => {
           return (
@@ -24,10 +25,10 @@ export const PreStudyInput = ({ title, handleSelect, setSelectedOption, selected
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <input {...register('studyAmount')}
-              style={{ fontSize: '180%' }}
+              className="text"
             />
             <select {...register('studySide')}
-              style={{ fontSize: '180%' }}
+              className="text"
             >
               <option>------</option>
               <option>front</option>
@@ -35,6 +36,7 @@ export const PreStudyInput = ({ title, handleSelect, setSelectedOption, selected
             </select>
             <input type='submit'
               style={{ fontSize: '180%' }}
+              className="text"
             />
             <p>{errors.studyAmount?.message}</p>
           </form>

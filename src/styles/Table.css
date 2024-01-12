@@ -1,13 +1,13 @@
 
 .table-details {
   font-size: 180%;
-  background-color: gray;
+  background-color:  RGB(55, 71, 79);
 }
 
 .table-row {
   width:33%;
   font-size: 200%;
-  background-color: black;
+  background-color:  RGB(55, 71, 79);
 }
 
 .settings {

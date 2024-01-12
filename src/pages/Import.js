@@ -8,7 +8,6 @@ export const Import = () => {
   const [decks, setDecks] = useDeckState()
   const [loadCompleteMessage, setLoadCompleteMessage] = useState("")
   const [deckName, setDeckName] = useState('')
-  const [loadedDeck, setLoadedDeck] = useState([])
 
   useEffect(() => {
     const storedDecks = localStorage.getItem('decks');
@@ -70,15 +69,15 @@ export const Import = () => {
       <div>
         <h2 className="header">Save and export deck into a txt file</h2>
         <div>
-          <input onChange={event => { setDeckName(event.target.value) }} />
-          <button onClick={handleFileSave}>Export Deck</button>
+          <input onChange={event => { setDeckName(event.target.value) }} style={{fontSize:'180%'}}/>
+          <button onClick={handleFileSave} className="text">Export Deck</button>
         </div>
       </div>
       <div>
         <h2 className="header">Import deck through txt</h2>
         <p className="text">Note: Decks with the same name will be combined <br />
           taking only unique cards from the imported deck</p>
-        <input type='file' accept='.txt' onChange={handleFileChange} />
+        <input type='file' accept='.txt' onChange={handleFileChange} style={{fontSize:'180%'}}/>
         <h2>
           {loadCompleteMessage}
         </h2>

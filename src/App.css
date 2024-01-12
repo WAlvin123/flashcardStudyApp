@@ -1,11 +1,16 @@
 .App {
   text-align: center;
-  background-color:rgb(79, 79, 79);
-  color: rgb(100, 191, 248);
+  background-color:RGB(220, 220, 220);
+  color: rgb(255, 128, 0);
   height: 100vh
 }
 
 .centered-container {
   display:flex;
   justify-content: center;
+}
+
+.edit {
+  width:50vw;
+  font-size: 180%;
 }

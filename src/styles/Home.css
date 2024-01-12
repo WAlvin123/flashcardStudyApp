@@ -1,12 +1,5 @@
 .selection {
-  background-color:rgb(79, 79, 79);
   text-align: center;
-  height:100%
-}
-
-.centered-container {
-  display:flex;
-  justify-content: center;
 }
 
 .study-select {
@@ -17,16 +10,16 @@
 }
 
 .study-button {
-  width: 300px;
-  height: 150px;
+  width: 25vw;
+  height: 25vh;
   cursor: pointer;
-  background-color: black;
+  background-color:  RGB(55, 71, 79);
   border: none;
-  color: rgb(100, 191, 248);
-  font-size: 18px;
+  color: rgb(255, 128, 0);
+  font-size: 180%;
 }
 
 .study-button:hover {
-  color:lightblue;
+  color:rgb(255, 179, 108);
   background-color: gray;
 }

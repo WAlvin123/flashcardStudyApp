@@ -22,7 +22,7 @@ export const Cards = () => {
   const [formState, setFormState] = useState({
     front: '',
     back: '',
-    deck:'------'
+    deck: '------'
   })
   const [editCardsVisible, setEditCardsVisible] = useState(false)
   const [transferVisible, setTransferVisible] = useState(false)
@@ -178,10 +178,20 @@ export const Cards = () => {
       {editCardsVisible == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-            <p>Front: {editCard.front} | Back: {editCard.back} | Deck: {editCard.deck} | ID: {editCard.id}</p>
-            <p>Note: If you leave a field empty, then that field will remain uneditted</p>
-            <input placeholder={editCard.front} onChange={(event) => { setEditFront(event.target.value) }} />
-            <input placeholder={editCard.back} onChange={(event) => { setEditBack(event.target.value) }} />
+            <p className="text">Front: {editCard.front} | Back: {editCard.back} | Deck: {editCard.deck}</p>
+            <p className="text">Note: If you leave a field empty, then that field will remain uneditted</p>
+            <div>
+              <input
+                placeholder={editCard.front}
+                onChange={(event) => { setEditFront(event.target.value) }}
+                className="edit"
+              />
+              <input
+                placeholder={editCard.back}
+                onChange={(event) => { setEditBack(event.target.value) }}
+                className="edit"
+              />
+            </div>
             <button className='create' onClick={completeEdit}>Submit edits</button>
           </div>
         </div>
@@ -192,33 +202,35 @@ export const Cards = () => {
           Create card
         </h2>
         <div className="centered-container">
-        <form onSubmit={handleSubmit(createCard)} className="submit">
-          <input {...register('front')}
-            value={formState.front}
-            onChange={(event) => { setFormState({ ...formState, front: event.target.value }) }}
-            placeholder="Front..."
-            className="front-input"
-          />
-          <textarea {...register('back')}
-            value={formState.back}
-            onChange={(event) => { setFormState({ ...formState, back: event.target.value }) }}
-            placeholder="Back..."
-            className="back-input"
-          />
-          <select {...register('deck')} onChange={(event => {
-            setFormState({...formState, deck: event.target.value})
-          })}>
-            <option>------</option>
-            {decks.map((deck) => {
-              return (
-                <option>
-                  {deck.name}
-                </option>
-              )
+          <form onSubmit={handleSubmit(createCard)} className="submit">
+            <input {...register('front')}
+              value={formState.front}
+              onChange={(event) => { setFormState({ ...formState, front: event.target.value }) }}
+              placeholder="Front..."
+              className="text"
+            />
+            <textarea {...register('back')}
+              value={formState.back}
+              onChange={(event) => { setFormState({ ...formState, back: event.target.value }) }}
+              placeholder="Back..."
+              className="text"
+            />
+            <select {...register('deck')} onChange={(event => {
+              setFormState({ ...formState, deck: event.target.value })
             })}
-          </select>
-          <input type="submit" value='Create' className="create"/>
-        </form>
+              className="text"
+            >
+              <option>------</option>
+              {decks.map((deck) => {
+                return (
+                  <option>
+                    {deck.name}
+                  </option>
+                )
+              })}
+            </select>
+            <input type="submit" value='Create' className="create" />
+          </form>
         </div>
         <p style={{ color: 'red' }}>{errorMessage}</p>
         <div>
@@ -237,7 +249,9 @@ export const Cards = () => {
             setIsItemsVisible(false)
           }
         }
-        )}>
+        )}
+          className="text"
+        >
           <option>------</option>
           {decks.map((deck) => {
             return (
@@ -250,37 +264,37 @@ export const Cards = () => {
         <p></p>
         {isItemsVisible && (
           <div className="centered-container">
-          <table className="view-cards">
-            <thead>
-              <th className="table-row">Front</th>
-              <th className="table-row">Back</th>
-              <th className="table-row">Settings</th>
-            </thead>
-            <tbody>
-              {decks[filteredDeckIndex].cards.map((card) => {
-                return (
-                  <tr style={{backgroundColor:'gray'}}>
-                    <td className="table-details">{card.front}</td>
-                    <td className="table-details">{card.back}</td>
-                    <div className="card-settings">
-                    <button className='create' 
-                     onClick={() => { removeCard(card.id) }}>Remove</button>
-                    <button className='create' 
-                     onClick={() => {
-                      setEditCardsVisible(true)
-                      setEditCard(card)
-                    }}>Edit</button>
-                    <button  className='create' 
-                    onClick={() => {
-                      setTransferVisible(true)
-                      setCardToTransfer(card)
-                    }}>Transfer</button>
-                    </div>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+            <table className="view-cards">
+              <thead>
+                <th className="table-row">Front</th>
+                <th className="table-row">Back</th>
+                <th className="table-row">Settings</th>
+              </thead>
+              <tbody>
+                {decks[filteredDeckIndex].cards.map((card) => {
+                  return (
+                    <tr style={{ backgroundColor:  'RGB(55, 71, 79)' }}>
+                      <td className="table-details">{card.front}</td>
+                      <td className="table-details">{card.back}</td>
+                      <div className="card-settings">
+                        <button className='create'
+                          onClick={() => { removeCard(card.id) }}>Remove</button>
+                        <button className='create'
+                          onClick={() => {
+                            setEditCardsVisible(true)
+                            setEditCard(card)
+                          }}>Edit</button>
+                        <button className='create'
+                          onClick={() => {
+                            setTransferVisible(true)
+                            setCardToTransfer(card)
+                          }}>Transfer</button>
+                      </div>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
