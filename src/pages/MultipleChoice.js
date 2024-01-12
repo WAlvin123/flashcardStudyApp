@@ -95,7 +95,7 @@ export const MultipleChoice = () => {
           return card.back !== choice
         }))
         setChoice('')
-        setAnswerMessage('Correct')
+        setAnswerMessage(<p className="text">Correct</p>)
         handleMC(randomCards[1])
       } else if (randomCards[0].back == choice && wrong == true) {
         setAnsweredCards(prevAnsweredCards => [randomCards[0], ...prevAnsweredCards])
@@ -104,12 +104,12 @@ export const MultipleChoice = () => {
           return card.back !== choice
         }))
         setChoice('')
-        setAnswerMessage('Correct')
+        setAnswerMessage(<p className="text">Correct</p>)
         handleMC(randomCards[1])
         setWrong(false)
       } else if (randomCards[0].back !== choice && wrong == false) {
         setWrong(true)
-        setAnswerMessage('Incorrect')
+        setAnswerMessage(<p className="text">Incorrect</p>)
         setRandomCards(prevRandom => {
           const updatedRandomCards = prevRandom.map((card, index) => {
             if (index == 0) {
@@ -121,7 +121,7 @@ export const MultipleChoice = () => {
           return updatedRandomCards
         })
       } else if (randomCards[0].back !== choice && wrong == true) {
-        setAnswerMessage('Incorrect')
+        setAnswerMessage(<p className="text">Incorrect</p>)
         setRandomCards(prevRandom => {
           const updatedRandomCards = prevRandom.map((card, index) => {
             if (index == 0) {
@@ -147,7 +147,7 @@ export const MultipleChoice = () => {
         }))
         handleMC(randomCards[1])
         setChoice('')
-        setAnswerMessage('Correct')
+        setAnswerMessage(<p className="text">Correct</p>)
         setScore(score + 1)
         console.log('option 2')
       } else if (randomCards[0].front == choice && wrong == true) {
@@ -161,10 +161,10 @@ export const MultipleChoice = () => {
         handleMC(randomCards[1])
         setWrong(false)
         setChoice('')
-        setAnswerMessage('Correct')
+        setAnswerMessage(<p className="text">Correct</p>)
       } else if (randomCards[0].front !== choice && wrong == false) {
         setWrong(true)
-        setAnswerMessage('Incorrect')
+        setAnswerMessage(<p className="text">Incorrect</p>)
         setRandomCards(prevRandom => {
           const updatedRandomCards = prevRandom.map((card, index) => {
             if (index == 0) {
@@ -186,7 +186,7 @@ export const MultipleChoice = () => {
           })
           return updatedRandomCards
         })
-        setAnswerMessage('Incorrect')
+        setAnswerMessage(<p className="text">Incorrect</p>)
       }
     }
   }
@@ -218,26 +218,32 @@ export const MultipleChoice = () => {
           <div class='modalContainer'>
             {randomCards.length !== 0 && message == '' && (
               <div>
-                <p style={{ fontSize: 20 }}>{randomCards[0].front}</p>
-                <div>
-                  {multipleChoice.map((choice) => {
-                    return (
-                      <button onClick={() => {
-                        setChoice(choice.back)
-                        setAnswerMessage('')
-                      }}>
-                        {choice.back}
-                      </button>
-                    )
-                  })}
+                <p style={{ fontSize: '600%' }}>{randomCards[0].front}</p>
+                <div className="centered-container">
+                  <div style={{ display: 'flex', justifyContent: "space-between", width: '50%' }}>
+                    {multipleChoice.map((choice) => {
+                      return (
+                        <button onClick={() => {
+                          setChoice(choice.back)
+                          setAnswerMessage('')
+                        }}
+                          className="create"
+                        >
+                          {choice.back}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
 
-                {choice !== '' && (<p>Selected choice: {choice}</p>)}
-                <h3>Cards remaining: {randomCards.length}</h3>
-                <h3>Score: {score}</h3>
+                {choice !== '' && (<p style={{ fontSize: '300%' }}>Selected choice: {choice}</p>)}
+                <h3 className="header">Cards remaining: {randomCards.length}</h3>
+                <h3 className="header">Score: {score}</h3>
                 <p>{answerMessage}</p>
-                <button onClick={handleCheckAnswer}>Check Answer</button>
-                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
+                <div style={{ display: 'grid', justifyContent: 'center' }}>
+                  <button onClick={handleCheckAnswer} className="create">Check Answer</button>
+                  <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }} className="create">Finish studying</button>
+                </div>
               </div>
             )}
 
@@ -262,25 +268,32 @@ export const MultipleChoice = () => {
           <div class='modalContainer'>
             {randomCards.length !== 0 && message == '' && (
               <div>
-                <p style={{ fontSize: 20 }}>{randomCards[0].back}</p>
-                <div>
-                  {multipleChoice.map((choice) => {
-                    return (
-                      <button onClick={() => {
-                        setChoice(choice.front)
-                        setAnswerMessage('')
-                      }}>
-                        {choice.front}
-                      </button>
-                    )
-                  })}
+                <p style={{ fontSize: '600%' }}>{randomCards[0].back}</p>
+                <div className="centered-container">
+                  <div style={{ display: 'flex', justifyContent: "space-between", width: '50%' }}>
+                    {multipleChoice.map((choice) => {
+                      return (
+                        <button onClick={() => {
+                          setChoice(choice.front)
+                          setAnswerMessage('')
+                        }}
+                          className="create"
+                        >
+                          {choice.front}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
-                {choice !== '' && (<p>Selected choice: {choice}</p>)}
-                <h3>Cards remaining: {randomCards.length}</h3>
-                <h3>Score: {score}</h3>
+
+                {choice !== '' && (<p style={{ fontSize: '300%' }}>Selected choice: {choice}</p>)}
+                <h3 className="header">Cards remaining: {randomCards.length}</h3>
+                <h3 className="header">Score: {score}</h3>
                 <p>{answerMessage}</p>
-                <button onClick={handleCheckAnswer}>Check Answer</button>
-                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
+                <div style={{ display: 'grid', justifyContent: 'center' }}>
+                  <button onClick={handleCheckAnswer} className="create">Check Answer</button>
+                  <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }} className="create">Finish studying</button>
+                </div>
               </div>
             )}
 
@@ -302,7 +315,7 @@ export const MultipleChoice = () => {
       )}
 
       <PreStudyInput
-        title={<h1>Multiple Choice</h1>}
+        title={<h2>Multiple Choice</h2>}
         guideMessage={
           <p>
             Guide: Select the right option corresponding <br />

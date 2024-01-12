@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDeckState } from "../components/useDeckState";
 import { ConfirmComplete } from "../components/ConfirmComplete";
 import { Results } from "../components/Results";
+import '../styles/Matching.css'
 
 export const Matching = () => {
   const [decks, setDecks] = useDeckState()
@@ -165,49 +166,57 @@ export const Matching = () => {
           <div class='modalContainer'>
             {randomCards.length !== 0 && message == '' && (
               <div>
-                {(choiceOne !== '' || choiceTwo !== '') && (
-                  <div className='decks-table' style={{ display: 'flex', justifyContent: "center", paddingBottom: '20px', paddingTop: '20px' }}>
-                    <table style={{ backgroundColor: "black", color: 'white' }}>
-                      <th width='200px'>Front</th>
-                      <th width='200px'>Back</th>
-                      <tr style={{ backgroundColor: 'white' }}>
-                        <td style={{ color: "black" }}>{choiceOne.front}</td>
-                        <td style={{ color: "black" }}>{choiceTwo.back}</td>
-                      </tr>
-                    </table>
-                    <button onClick={handleCheckAnswer}>Check Answer</button>
-                  </div>
+                <div class='centered-container'>
+                  <div class='column-container'>
+                    <div>
+                      {randomCards.map((card) => {
+                        return (
+                          <div>
+                            <button onClick={() => { handleChoice(card, card.column) }} className="option">
+                              {card.front}
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </div>
 
-                )}
+                    <div style={{display:"flex", flexDirection:'column'}}>
+                    {(choiceOne !== '' || choiceTwo !== '') && (
+                      <div className='matching-table'>
+                        <table style={{ backgroundColor: "black", color: 'rgb(100, 191, 248)' }}>
+                          <th className="matching-table-header">Front</th>
+                          <th className="matching-table-header">Back</th>
+                          <tr style={{ backgroundColor: 'gray' }}>
+                            <td className="matching-table-details">{choiceOne.front}</td>
+                            <td className="matching-table-details">{choiceTwo.back}</td>
+                          </tr>
+                        </table>
+                      </div>
+                    )}
+                      <div className="user">
+                      <button className='create' onClick={handleCheckAnswer}>Check Answer</button>
+                      <h2 className="header">{answerMessage}</h2>
+                      <h2 className="header">Score: {score}</h2>
+                      </div>
+                    </div>
 
-                <h2>{answerMessage}</h2>
-                <h2>Score: {score}</h2>
-                <div class='column-container'>
-                  <div>
-                    {randomCards.map((card) => {
-                      return (
-                        <div>
-                          <button onClick={() => { handleChoice(card, card.column) }}>
-                            {card.front}
-                          </button>
-                        </div>
-                      )
-                    })}
+                    <div>
+                      {columnTwo.map((card) => {
+                        return (
+                          <div>
+                            <button onClick={() => { handleChoice(card, card.column) }} className="option">
+                              {card.back}
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
-                  <div>
-                    {columnTwo.map((card) => {
-                      return (
-                        <div>
-                          <button onClick={() => { handleChoice(card, card.column) }}>
-                            {card.back}
-                          </button>
-                        </div>
-                      )
-                    })}
-                  </div>
+                  <h2></h2>
                 </div>
-                <h2></h2>
-                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}
+                    className="create"
+                  >Finish studying</button>
               </div>
             )}
 
@@ -229,12 +238,18 @@ export const Matching = () => {
       )}
 
       <div class='study-options'>
-        <h1>Matching</h1>
-        <h2>Select the deck you would like to study from</h2>
-        <p>Guide: Match the front with the correct opposite side of the card</p>
+        <h2 className="header">
+          <h2>Matching</h2>
+        </h2>
+        <p className="text">Guide: Match the front with the correct opposite side of the card</p>
+        <h2 className="header">
+          Select the deck you would like to study from
+        </h2>
         <select onChange={(event) => {
           handleSelect(event.target.value)
-        }}>
+        }}
+          style={{ fontSize: '180%' }}
+        >
           <option>------</option>
           {decks.map((decks) => {
             return (
@@ -244,13 +259,19 @@ export const Matching = () => {
             )
           })}
         </select>
-        {selectedOption !== "------" && <p>Selected deck contains: {filteredDeck.cards.length} cards</p>}
+        {selectedOption !== "------" && <p className="text">Selected deck contains: {filteredDeck.cards.length} cards</p>}
         <div>
-          <h2>Input the amount of cards you would like to study</h2>
+          <h2 className="header">Input the amount of cards you would like to study</h2>
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <input {...register('studyAmount')} onChange={() => { setErrorMessage('') }} />
-              <input type='submit' />
+              <input
+                {...register('studyAmount')}
+                onChange={() => { setErrorMessage('') }}
+                style={{ fontSize: '180%' }}
+              />
+              <input
+                style={{ fontSize: '180%' }}
+                type='submit' />
             </form>
             <p>
               {errors.studyAmount?.message}

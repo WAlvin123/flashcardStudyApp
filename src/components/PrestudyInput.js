@@ -1,13 +1,13 @@
 export const PreStudyInput = ({ title, handleSelect, setSelectedOption, selectedOption, decks, filteredDeck, handleSubmit, onSubmit, register, errors, guideMessage }) => {
   return (
-    <div class='study-options'>
-      {title}
-      {guideMessage}
-      <h2>Select the deck you would like to study from</h2>
+    <div>
+      <h2 className="header">{title}</h2>
+      <p className="text">{guideMessage}</p>
+      <h2 className="header">Select the deck you would like to study from</h2>
       <select onChange={(event) => {
         handleSelect(event.target.value)
         setSelectedOption(event.target.value)
-      }}>
+      }} style={{ fontSize: '150%' }}>
         <option>------</option>
         {decks.map((decks) => {
           return (
@@ -17,19 +17,25 @@ export const PreStudyInput = ({ title, handleSelect, setSelectedOption, selected
           )
         })}
       </select>
-      {selectedOption !== "------" && <p>Selected deck contains: {filteredDeck.cards.length} cards</p>}
+      {selectedOption !== "------" && <p className="text">Selected deck contains: {filteredDeck.cards.length} cards</p>}
       <div>
-        <h2>Input the amount of cards would like to study, and <br />
+        <h2 className="header">Input the amount of cards would like to study, and <br />
           select what side you would like the question prompt to be</h2>
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <input {...register('studyAmount')} />
-            <select {...register('studySide')}>
+            <input {...register('studyAmount')}
+              style={{ fontSize: '180%' }}
+            />
+            <select {...register('studySide')}
+              style={{ fontSize: '180%' }}
+            >
               <option>------</option>
               <option>front</option>
               <option>back</option>
             </select>
-            <input type='submit' />
+            <input type='submit'
+              style={{ fontSize: '180%' }}
+            />
             <p>{errors.studyAmount?.message}</p>
           </form>
         </div>

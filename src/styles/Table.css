@@ -1,0 +1,18 @@
+
+.table-details {
+  font-size: 180%;
+  background-color: gray;
+}
+
+.table-row {
+  width:33%;
+  font-size: 200%;
+  background-color: black;
+}
+
+.settings {
+  display:flex;
+  justify-content: space-between;
+  padding-left: 20%;
+  padding-right: 20%;
+}

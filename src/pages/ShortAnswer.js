@@ -73,7 +73,7 @@ export const ShortAnswer = () => {
   const checkAnswer = () => {
     if (studySide == 'front') {
       if (userInput == randomCards[0].back && wrong == false) {
-        setAnsweredCards(prevAnswered => [{...randomCards[0], attempt:0}, ...prevAnswered])
+        setAnsweredCards(prevAnswered => [{ ...randomCards[0], attempt: 0 }, ...prevAnswered])
         setRandomCards(randomCards.filter((card) => { return card.back !== userInput }))
         setAnswerMessage('Correct')
         setScore(score + 1)
@@ -91,7 +91,7 @@ export const ShortAnswer = () => {
         setRandomCards(prevRandom => {
           const updatedRandom = prevRandom.map((card, index) => {
             if (index == 0) {
-              return {...card, attempt: (card.attempt || 0) + 1}
+              return { ...card, attempt: (card.attempt || 0) + 1 }
             } else return card
           })
           return updatedRandom
@@ -100,7 +100,7 @@ export const ShortAnswer = () => {
         setShowAnswer(false)
       }
     } else if (userInput == randomCards[0].front && wrong == false) {
-      setAnsweredCards(prevAnswered => [{...randomCards[0], attempt:0}, ...prevAnswered])
+      setAnsweredCards(prevAnswered => [{ ...randomCards[0], attempt: 0 }, ...prevAnswered])
       setRandomCards(randomCards.filter((card) => { return card.front !== userInput }))
       setAnswerMessage('Correct')
       setScore(score + 1)
@@ -118,7 +118,7 @@ export const ShortAnswer = () => {
       setRandomCards(prevRandom => {
         const updatedRandom = prevRandom.map((card, index) => {
           if (index == 0) {
-            return {...card, attempt: (card.attempt || 0) + 1}
+            return { ...card, attempt: (card.attempt || 0) + 1 }
           } else return card
         })
         return updatedRandom
@@ -151,29 +151,43 @@ export const ShortAnswer = () => {
   return (
 
     <div>
-      {studySide == 'front' && (
+      {(studySide == 'front') && (
         <div class='modalBackground'>
           <div class='modalContainer'>
-
             {randomCards.length !== 0 && confirmationMessage == '' && (
               <div>
-                <div>
-                  <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput} />
-                  <button onClick={checkAnswer}>Check answer</button>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <p style={{ fontSize: '600%' }}>{randomCards[0].front}</p>
+                  <div>
+                    <input 
+                    onChange={(event) => { setUserInput(event.target.value) }} 
+                    value={userInput}
+                    style={{ fontSize: '180%' }} 
+                    placeholder="Enter answer..."
+                    onKeyDown={(event) => {
+                      if (event.key == 'Enter') {
+                        checkAnswer()
+                      }
+                    }}
+                    />
+                    <button onClick={checkAnswer}
+                      className="create"
+                    >Check answer</button>
+                  </div>
+                  <p className="text">{answerMessage}</p>
+                  <button
+                    onClick={() => {
+                      setShowAnswer(!showAnswer)
+                    }}
+                    className="create"
+                  >Show Answer</button>
+                  {showAnswer && <p style={{ fontSize: '300%' }}>{randomCards[0].back}</p>}
                 </div>
-                <h2>
-                  {randomCards[0].front}<button onClick={() => {
-                    setShowAnswer(!showAnswer)
-                    setWrong(true)
-                  }}>Show Answer</button>
-                </h2>
-                {showAnswer && randomCards[0].back}
-                <h3>{answerMessage}</h3>
-                <h3>Cards remaining: {randomCards.length}</h3>
-                <h3>Score: {score}</h3>
-                <button onClick={() => { setConfirmationMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
-              </div>
-            )}
+                <h3 className="header">Cards remaining: {randomCards.length}</h3>
+                <h3 className="header">Score: {score}</h3>
+                <button onClick={() => { setConfirmationMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}
+                  className="create">Finish studying</button>
+              </div>)}
 
             <ConfirmComplete
               message={confirmationMessage}
@@ -197,20 +211,38 @@ export const ShortAnswer = () => {
           <div class='modalContainer'>
             {randomCards.length !== 0 && confirmationMessage == '' && (
               <div>
-                <div>
-                  <input onChange={(event) => { setUserInput(event.target.value) }} value={userInput} />
-                  <button onClick={checkAnswer}>Check answer</button>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <p style={{ fontSize: '600%' }}>{randomCards[0].back}</p>
+                  <div>
+                    <input 
+                    onChange={(event) => { setUserInput(event.target.value) }} 
+                    value={userInput}
+                    style={{ fontSize: '180%' }} 
+                    placeholder="Enter answer..."
+                    onKeyDown={(event) => {
+                      if (event.key == 'Enter') {
+                        checkAnswer()
+                      }
+                    }}
+                    />
+                    <button onClick={checkAnswer}
+                      className="create"
+                    >Check answer</button>
+                  </div>
+                  <p className="text">{answerMessage}</p>
+                  <h2></h2>
+                  <button
+                    onClick={() => {
+                      setShowAnswer(!showAnswer)
+                    }}
+                    className="create"
+                  >Show Answer</button>
+                  {showAnswer && <p style={{ fontSize: '300%' }}>{randomCards[0].front}</p>}
                 </div>
-                <h2>
-                  {randomCards[0].back} <button onClick={() => {
-                    setShowAnswer(!showAnswer)
-                  }}>Show Answer</button> {showAnswer && randomCards[0].front}
-                </h2>
-                {showAnswer && randomCards[0].back}
-                <p></p>
-                <h3>Cards remaining: {randomCards.length}</h3>
-                <h3>Score: {score}</h3>
-                <button onClick={() => { setConfirmationMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
+                <h3 className="header">Cards remaining: {randomCards.length}</h3>
+                <h3 className="header">Score: {score}</h3>
+                <button onClick={() => { setConfirmationMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}
+                  className="create">Finish studying</button>
               </div>)}
 
             <ConfirmComplete
@@ -228,8 +260,9 @@ export const ShortAnswer = () => {
           </div>
         </div>
       )}
+
       <PreStudyInput
-        title={<h1>Short Answer</h1>}
+        title={<h2>Short Answer</h2>}
         guideMessage={
           <p>
             Guide: Enter the corresponding side of the card

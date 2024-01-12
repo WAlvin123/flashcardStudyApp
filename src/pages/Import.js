@@ -68,15 +68,15 @@ export const Import = () => {
   return (
     <div className='import'>
       <div>
-        <h2 style={{ paddingTop: '20px' }}>Save and export deck into a txt file</h2>
+        <h2 className="header">Save and export deck into a txt file</h2>
         <div>
           <input onChange={event => { setDeckName(event.target.value) }} />
           <button onClick={handleFileSave}>Export Deck</button>
         </div>
       </div>
       <div>
-        <h2 style={{ paddingTop: '20px' }}>Import deck through txt</h2>
-        <p>Note: Decks with the same name will be combined <br />
+        <h2 className="header">Import deck through txt</h2>
+        <p className="text">Note: Decks with the same name will be combined <br />
           taking only unique cards from the imported deck</p>
         <input type='file' accept='.txt' onChange={handleFileChange} />
         <h2>

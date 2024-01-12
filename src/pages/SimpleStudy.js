@@ -73,7 +73,7 @@ export const SimpleStudy = () => {
 
     randomCards.forEach((card, index) => {
       if (card.firstTry == undefined && index == 0) {
-        setAnsweredCards(prevAnsweredCards => [{...copiedRandomCards[0], attempt:0}, ...prevAnsweredCards])
+        setAnsweredCards(prevAnsweredCards => [{ ...copiedRandomCards[0], attempt: 0 }, ...prevAnsweredCards])
         randomCards.splice(0, 1)
         setScore(score + 1)
         return false
@@ -89,7 +89,7 @@ export const SimpleStudy = () => {
 
   const handleBad = () => {
     setRandomCards(prevRandom => {
-      const firstCard = { ...prevRandom[0], firstTry: false, attempt: (prevRandom[0].attempt || 0) + 1  }
+      const firstCard = { ...prevRandom[0], firstTry: false, attempt: (prevRandom[0].attempt || 0) + 1 }
       const remainingCards = prevRandom.slice(1)
       remainingCards.sort(() => Math.random() - 0.5)
       const updatedRandomCards = [...remainingCards, firstCard]
@@ -122,30 +122,29 @@ export const SimpleStudy = () => {
           <div class='modalContainer'>
             {randomCards.length > 0 && message == '' && (
               <div class='mid-study'>
-                <p style={{ fontSize: 25 }}>{randomCards[0].front}</p>
+                <p style={{ fontSize: '600%' }}>{randomCards[0].front}</p>
                 {answerState == 0 && (
-                  <button onClickCapture={() => { setAnswerState(1) }}>Show Answer</button>
+                  <button
+                    onClick={() => { setAnswerState(1) }}
+                    className='create'
+                  >Show Answer</button>
                 )}
 
                 {answerState == 1 && (
                   <div>
-                    <h2>{randomCards[0].back}</h2>
-                    <p>How did you feel about this card?</p>
-                    <button onClick={handleBad}>Try again</button>
-                    <button onClick={handleGood}>Memorized</button>
+                    <p style={{ fontSize: '300%' }}>{randomCards[0].front}</p>
+                    <p className='text'>How did you feel about this card?</p>
+                    <div className='centered-container'>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', width: '12vw' }}>
+                        <button onClick={handleBad} className='create'>Try again</button>
+                        <button onClick={handleGood} className='create'>Good</button>
+                      </div>
+                    </div>
                   </div>
                 )}
-                <h3>Cards remaining: {randomCards.length}</h3>
-                <h3>Score: {score}</h3>
-                {answeredCards.map(card => {
-                  return (
-                    <div>
-                      {card.front}
-                      {card.attempts}
-                    </div>
-                  )
-                })}
-                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
+                <h3 className='header'>Cards remaining: {randomCards.length}</h3>
+                <h3 className='header'>Score: {score}</h3>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }} className='create'>Finish studying</button>
               </div>
             )}
 
@@ -170,22 +169,26 @@ export const SimpleStudy = () => {
           <div class='modalContainer'>
             {randomCards.length > 0 && message == '' && (
               <div class='mid-study'>
-                <h2>{randomCards[0].back}</h2>
+                <p style={{ fontSize: '600%' }}>{randomCards[0].back}</p>
                 {answerState == 0 && (
-                  <button onClickCapture={() => { setAnswerState(1) }}>Show Answer</button>
+                  <button onClickCapture={() => { setAnswerState(1) }} className='create'>Show Answer</button>
                 )}
 
                 {answerState == 1 && (
                   <div>
-                    <p style={{ fontSize: 25 }}>{randomCards[0].front}</p>
-                    <p>How did you feel about this card?</p>
-                    <button onClick={handleBad}>Try again</button>
-                    <button onClick={handleGood}>Memorized</button>
+                    <p style={{ fontSize: '300%' }}>{randomCards[0].front}</p>
+                    <p className='text'>How did you feel about this card?</p>
+                    <div className='centered-container'>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', width: '12vw' }}>
+                        <button onClick={handleBad} className='create'>Try again</button>
+                        <button onClick={handleGood} className='create'>Good</button>
+                      </div>
+                    </div>
                   </div>
                 )}
-                <h3>Cards remaining: {randomCards.length}</h3>
-                <h2>Score: {score}</h2>
-                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}>Finish studying</button>
+                <h3 className='header'>Cards remaining: {randomCards.length}</h3>
+                <h3 className='header'>Score: {score}</h3>
+                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }} className='create'>Finish studying</button>
               </div>
             )}
 
@@ -206,7 +209,7 @@ export const SimpleStudy = () => {
       )}
 
       <PreStudyInput
-        title={<h1>Memorization</h1>}
+        title={<h2>Memorization</h2>}
         guideMessage={
           <p>
             Guide: If the card is not memorized it will be pushed to the<br />

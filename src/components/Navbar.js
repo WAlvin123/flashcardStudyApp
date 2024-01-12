@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import '../styles/Navbar.css'
 
@@ -7,7 +6,7 @@ export const Navbar = () => {
 
   return (
     <div className="navbar">
-    <h1>Flash card App</h1>
+    <h2 className="title">Flash card App</h2>
       <button className="link" onClick={() => {navigate('/')}}>Home</button>
       <button className="link" onClick={() => {navigate('decks')}}>Decks</button>
       <button className="link" onClick={() => {navigate('cards')}}>Cards</button>

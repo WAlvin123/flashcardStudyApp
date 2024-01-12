@@ -8,8 +8,8 @@
 }
 
 .modalContainer {
-  width:550px;
-  height:330px;
+  width:80%;
+  height:70%;
   border-radius: 12px;
   background-color: white;
   box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
@@ -27,4 +27,5 @@
 .confirmation-message {
   color: red;
   font-weight: bold;
+  font-size: 180%;
 }

@@ -2,3 +2,31 @@
   background-color:rgb(79, 79, 79);
   width:100%;
 }
+
+.view-deck {
+  width:60%;
+}
+
+.text-box {
+  font-size: 150%;
+}
+
+.create {
+  font-size:180%;
+  width:fit-content;
+  align-self: center;
+  background: transparent;
+  border: none;
+  cursor:pointer;
+  color: rgb(100, 191, 248);
+}
+
+.create:hover {
+  color:lightblue;
+}
+
+.deck-submit {
+  display:flex;
+  flex-direction: row;
+  width:12.5%;
+}

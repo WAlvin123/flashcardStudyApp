@@ -5,15 +5,15 @@ export const Results = ({ randomCards, score, total, handleFinishStudy, answered
   if (randomCards.length == 0) {
     return (
       <div>
-        <h1>Results:</h1>
-        <h2>You scored {score} / {total}</h2>
+        <h1 className="header">Results:</h1>
+        <h2 className="header">You scored {score} / {total}</h2>
 
         {answeredCards.some(card => card.attempt !== 0) && (
           <div>
-            <p>Most attempted cards (up to 5)</p>
+            <p className="text">Most attempted cards (up to 5)</p>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <table style={{ display: 'flex', alignContent: "center", }}>
-                <th style={{paddingRight:'30px'}}>
+                <th className="text">
                   Card
                   <td>
                     {sortedAnsweredCards.slice(0, 5).map(card => {
@@ -26,13 +26,13 @@ export const Results = ({ randomCards, score, total, handleFinishStudy, answered
 
                   </td>
                 </th>
-                <th>
+                <th className="text">
                   Attempts
                   <td>
                     {sortedAnsweredCards.slice(0, 5).map(card => {
                       if (card.attempt !== 0) {
                         return (
-                          <p style={{ paddingLeft: '30px' }}>{card.attempt}</p>
+                          <p>{card.attempt}</p>
                         )
                       }
                     })}
@@ -42,7 +42,7 @@ export const Results = ({ randomCards, score, total, handleFinishStudy, answered
             </div>
           </div>
         )}
-        <button onClick={handleFinishStudy}>Finish studying</button>
+        <button onClick={handleFinishStudy} className="create">Finish studying</button>
       </div>
     )
   }

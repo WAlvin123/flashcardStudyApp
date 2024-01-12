@@ -5,19 +5,22 @@
   padding-left: 300px;
   padding-right: 300px;
   padding-bottom: 10px;
+  align-items: baseline;
 }
 
 .title {
-  color: black;
-  background-color: black;
+  color: rgb(100, 191, 248);
+  margin-right: 10px;
+  font-size:300%;
 }
 
 .link {
   color: rgb(100, 191, 248);
-    background-color: transparent;
-  font-size: 20px;
+  font-size: 200%;
   border: none;
   cursor: pointer;
+  height:1%;
+  background-color: black;
 }
 
 .link:hover {

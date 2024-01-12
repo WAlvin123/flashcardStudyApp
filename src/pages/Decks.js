@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
 import '../styles/Decks.css'
+import '../styles/Table.css'
+import { useForm } from "react-hook-form"
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup';
+
 
 export const Decks = () => {
   useEffect(() => {
@@ -119,17 +124,29 @@ export const Decks = () => {
       )}
 
           <div class='decks'>
-            <h2>Create Deck</h2>
-            <div>
-              <input onChange={(event) => { setInputValue(event.target.value) }} value={inputValue} />
-              <button onClick={createDeck}>Create</button>
+            <h2 className="header">Create Deck</h2>
+            <div className='centered-container'>
+            <div className="deck-submit">
+              <input 
+              placeholder="Deck name..."
+              onChange={(event) => { setInputValue(event.target.value) }} 
+              value={inputValue} 
+              className="text-box"
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  createDeck()
+                }
+              }}
+              />
+              <button onClick={createDeck} className="create">Create</button>
               <p>{duplicateMessage}</p>
             </div>
-            <h2>Decks</h2>
+            </div>
+            <h2 className="header">Decks</h2>
 
             {combineState == 0 && (
               <div>
-                <button onClick={() => { setCombineState(1) }}>
+                <button onClick={() => { setCombineState(1) }} className="create">
                   Combine decks
                 </button>
                 <h2></h2>
@@ -149,32 +166,35 @@ export const Decks = () => {
             )
             }
 
+            <div className="centered-container">
             <table class='view-deck' style={{ backgroundColor: 'black' }}>
-              <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Name</th>
-              <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Amount of Cards</th>
-              <th style={{ width: '100px', backgroundColor: 'black', color: "white" }}>Settings</th>
-
-
+              <th className="table-row">Name</th>
+              <th className="table-row">Amount of Cards</th>
+              <th className="table-row">Settings</th>
               {decks.map((deck) => {
                 return (
-                  <tr>
-                    <td style={{ backgroundColor: 'white' }}>{deck.name}</td>
-                    <td style={{ backgroundColor: 'white' }}>{deck.cards.length}</td>
-                    <td style={{ backgroundColor: 'white' }}>
+                  <tr style={{backgroundColor:'gray'}}>
+                    <td className="table-details">{deck.name}</td>
+                    <td className="table-details">{deck.cards.length}</td>
+                      <div className="settings">
                       <button onClick={
                         () => { removeDeck(deck.id) }
-                      }>Remove</button>
+                      }
+                      className="create">Remove</button>
                       <button onClick={() => {
                         setEditDecksVisible(true)
                         setEditDeck(deck)
-                      }}>Edit</button>
-                    </td>
+                      }}
+                      className="create">Edit</button>
+                      </div>
 
                     {combineState == 1 && (
                       <button onClick={() => {
                         setCombineState(2)
                         setMainDeck({ ...deck })
-                      }}>
+                      }}
+                      className="create"
+                      >
                         Set main deck
                       </button>
                     )
@@ -183,7 +203,9 @@ export const Decks = () => {
                     {(combineState == 2 && deck.id !== mainDeck.id) && (
                       <button onClick={() => {
                         setSubDeck(deck)
-                      }}>
+                      }}
+                      className="create"
+                      >
                         Set sub deck
                       </button>
                     )
@@ -192,6 +214,7 @@ export const Decks = () => {
                 )
               })}
             </table>
+            </div>
           </div>
       </div>
   )

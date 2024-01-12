@@ -2,5 +2,10 @@
   text-align: center;
   background-color:rgb(79, 79, 79);
   color: rgb(100, 191, 248);
-  padding-bottom: 22%;
+  height: 100vh
+}
+
+.centered-container {
+  display:flex;
+  justify-content: center;
 }

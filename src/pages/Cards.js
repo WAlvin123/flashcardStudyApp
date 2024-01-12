@@ -4,6 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
 import '../styles/Cards.css'
+import '../styles/Table.css'
+import '../styles/Text.css'
 
 export const Cards = () => {
   useEffect(() => {
@@ -19,7 +21,8 @@ export const Cards = () => {
   const [isItemsVisible, setIsItemsVisible] = useState(false)
   const [formState, setFormState] = useState({
     front: '',
-    back: ''
+    back: '',
+    deck:'------'
   })
   const [editCardsVisible, setEditCardsVisible] = useState(false)
   const [transferVisible, setTransferVisible] = useState(false)
@@ -167,7 +170,7 @@ export const Cards = () => {
                 }
               })}
             </select>
-            <button onClick={transferCard}>Confirm changes</button>
+            <button className='create' onClick={transferCard}>Confirm changes</button>
           </div>
         </div>
       )}
@@ -179,27 +182,32 @@ export const Cards = () => {
             <p>Note: If you leave a field empty, then that field will remain uneditted</p>
             <input placeholder={editCard.front} onChange={(event) => { setEditFront(event.target.value) }} />
             <input placeholder={editCard.back} onChange={(event) => { setEditBack(event.target.value) }} />
-            <button onClick={completeEdit}>Submit edits</button>
+            <button className='create' onClick={completeEdit}>Submit edits</button>
           </div>
         </div>
       )}
 
       <div class='cards'>
-        <h2>
+        <h2 className="header">
           Create card
         </h2>
-        <form onSubmit={handleSubmit(createCard)} style={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
+        <div className="centered-container">
+        <form onSubmit={handleSubmit(createCard)} className="submit">
           <input {...register('front')}
             value={formState.front}
             onChange={(event) => { setFormState({ ...formState, front: event.target.value }) }}
             placeholder="Front..."
+            className="front-input"
           />
           <textarea {...register('back')}
             value={formState.back}
             onChange={(event) => { setFormState({ ...formState, back: event.target.value }) }}
             placeholder="Back..."
+            className="back-input"
           />
-          <select {...register('deck')}>
+          <select {...register('deck')} onChange={(event => {
+            setFormState({...formState, deck: event.target.value})
+          })}>
             <option>------</option>
             {decks.map((deck) => {
               return (
@@ -209,14 +217,15 @@ export const Cards = () => {
               )
             })}
           </select>
-          <input type="submit" value='Create' />
+          <input type="submit" value='Create' className="create"/>
         </form>
+        </div>
         <p style={{ color: 'red' }}>{errorMessage}</p>
         <div>
-          <h2>
+          <h2 className="header">
             View cards
           </h2>
-          <p>
+          <p className="text">
             Select a deck you would like to view the cards of
           </p>
         </div>
@@ -240,32 +249,39 @@ export const Cards = () => {
         </select>
         <p></p>
         {isItemsVisible && (
-          <table style={{ backgroundColor: "black" }}>
+          <div className="centered-container">
+          <table className="view-cards">
             <thead>
-              <th style={{ width: '150px', backgroundColor: "black", color: "white" }}>Front</th>
-              <th style={{ width: '300px',backgroundColor: "black", color: "white" }}>Back</th>
-              <th style={{ width: '150px', backgroundColor: 'black', color: "white" }}>Settings</th>
+              <th className="table-row">Front</th>
+              <th className="table-row">Back</th>
+              <th className="table-row">Settings</th>
             </thead>
             <tbody>
               {decks[filteredDeckIndex].cards.map((card) => {
                 return (
-                  <tr style={{ backgroundColor: "white" }}>
-                    <td>{card.front}</td>
-                    <td>{card.back}</td>
-                    <button onClick={() => { removeCard(card.id) }}>Remove</button>
-                    <button onClick={() => {
+                  <tr style={{backgroundColor:'gray'}}>
+                    <td className="table-details">{card.front}</td>
+                    <td className="table-details">{card.back}</td>
+                    <div className="card-settings">
+                    <button className='create' 
+                     onClick={() => { removeCard(card.id) }}>Remove</button>
+                    <button className='create' 
+                     onClick={() => {
                       setEditCardsVisible(true)
                       setEditCard(card)
                     }}>Edit</button>
-                    <button onClick={() => {
+                    <button  className='create' 
+                    onClick={() => {
                       setTransferVisible(true)
                       setCardToTransfer(card)
                     }}>Transfer</button>
+                    </div>
                   </tr>
                 )
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>
