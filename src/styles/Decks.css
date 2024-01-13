@@ -17,15 +17,13 @@
   background: transparent;
   border: none;
   cursor:pointer;
-  color: rgb(255, 128, 0);
-}
+  color:  rgb(0, 218, 113);}
 
 .create:hover {
-  color:rgb(255, 179, 108);
-}
+  color: rgb(110, 137, 255);}
 
 .deck-submit {
   display:flex;
   flex-direction: row;
-  width:12.5%;
+  width:15%;
 }

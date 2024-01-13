@@ -1,7 +1,7 @@
 .navbar {
   display: flex;
   justify-content:space-between;
-  background-color: RGB(55, 71, 79);
+  background-color: rgb(0, 218, 113);
   padding-left: 300px;
   padding-right: 300px;
   padding-bottom: 10px;
@@ -9,13 +9,13 @@
 }
 
 .title {
-  color: rgb(255, 128, 0);
+  color: rgb(255, 255, 255);
   margin-right: 10px;
   font-size:300%;
 }
 
 .link {
-  color: rgb(255, 128, 0);
+  color: rgb(0, 0, 0);
   font-size: 200%;
   border: none;
   cursor: pointer;
@@ -24,6 +24,6 @@
 }
 
 .link:hover {
-  color:rgb(255, 179, 108);
+  color:rgb(215, 215, 215);
 }
 

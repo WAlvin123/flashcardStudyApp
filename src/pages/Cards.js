@@ -199,7 +199,7 @@ export const Cards = () => {
 
       <div class='cards'>
         <h2 className="header">
-          Create card
+          Create Card
         </h2>
         <div className="centered-container">
           <form onSubmit={handleSubmit(createCard)} className="submit">
@@ -235,7 +235,7 @@ export const Cards = () => {
         <p style={{ color: 'red' }}>{errorMessage}</p>
         <div>
           <h2 className="header">
-            View cards
+            View Cards
           </h2>
           <p className="text">
             Select a deck you would like to view the cards of
@@ -273,18 +273,18 @@ export const Cards = () => {
               <tbody>
                 {decks[filteredDeckIndex].cards.map((card) => {
                   return (
-                    <tr style={{ backgroundColor:  'RGB(55, 71, 79)' }}>
+                    <tr style={{ backgroundColor:  'white' }}>
                       <td className="table-details">{card.front}</td>
                       <td className="table-details">{card.back}</td>
                       <div className="card-settings">
-                        <button className='create'
+                        <button className='settings-button'
                           onClick={() => { removeCard(card.id) }}>Remove</button>
-                        <button className='create'
+                        <button className='settings-button'
                           onClick={() => {
                             setEditCardsVisible(true)
                             setEditCard(card)
                           }}>Edit</button>
-                        <button className='create'
+                        <button className='settings-button'
                           onClick={() => {
                             setTransferVisible(true)
                             setCardToTransfer(card)

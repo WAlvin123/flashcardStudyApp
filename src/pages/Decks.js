@@ -174,25 +174,29 @@ export const Decks = () => {
             }
 
             <div className="centered-container">
-            <table class='view-deck' style={{ backgroundColor: 'black' }}>
+            <table class='view-deck'>
               <th className="table-row">Name</th>
               <th className="table-row">Amount of Cards</th>
               <th className="table-row">Settings</th>
               {decks.map((deck) => {
                 return (
-                  <tr style={{backgroundColor:' RGB(55, 71, 79)'}}>
+                  <tr style={{backgroundColor:'white'}}>
                     <td className="table-details">{deck.name}</td>
                     <td className="table-details">{deck.cards.length}</td>
                       <div className="settings">
-                      <button onClick={
+                      <button 
+                      onClick={
                         () => { removeDeck(deck.id) }
                       }
-                      className="create">Remove</button>
-                      <button onClick={() => {
+                      className="settings-button"
+                      >Remove</button>
+                      <button 
+                      onClick={() => {
                         setEditDecksVisible(true)
                         setEditDeck(deck)
                       }}
-                      className="create">Edit</button>
+                      className="settings-button"
+                      >Edit</button>
                       </div>
 
                     {combineState == 1 && (

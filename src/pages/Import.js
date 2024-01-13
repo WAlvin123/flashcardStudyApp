@@ -74,7 +74,7 @@ export const Import = () => {
         </div>
       </div>
       <div>
-        <h2 className="header">Import deck through txt</h2>
+        <h2 className="header">Import deck</h2>
         <p className="text">Note: Decks with the same name will be combined <br />
           taking only unique cards from the imported deck</p>
         <input type='file' accept='.txt' onChange={handleFileChange} style={{fontSize:'180%'}}/>

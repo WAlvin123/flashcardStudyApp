@@ -132,7 +132,7 @@ export const SimpleStudy = () => {
 
                 {answerState == 1 && (
                   <div>
-                    <p style={{ fontSize: '300%' }}>{randomCards[0].front}</p>
+                    <p style={{ fontSize: '300%' }}>{randomCards[0].back}</p>
                     <p className='text'>How did you feel about this card?</p>
                     <div className='centered-container'>
                       <div style={{ display: 'flex', justifyContent: 'space-between', width: '12vw' }}>

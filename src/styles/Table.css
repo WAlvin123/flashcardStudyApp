@@ -1,13 +1,15 @@
 
 .table-details {
   font-size: 180%;
-  background-color:  RGB(55, 71, 79);
+  background-color:  white;
+  color: rgb(0, 218, 113);
 }
 
 .table-row {
   width:33%;
   font-size: 200%;
-  background-color:  RGB(55, 71, 79);
+  background-color:  white;
+  color: rgb(0, 218, 113);
 }
 
 .settings {
@@ -15,4 +17,15 @@
   justify-content: space-between;
   padding-left: 20%;
   padding-right: 20%;
+  color: rgb(0, 218, 113);
+}
+
+.settings-button {
+  font-size:180%;
+  width:fit-content;
+  align-self: center;
+  background: transparent;
+  border: none;
+  cursor:pointer;
+  color: rgb(0, 218, 113);
 }

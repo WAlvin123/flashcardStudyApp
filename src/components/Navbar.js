@@ -6,7 +6,7 @@ export const Navbar = () => {
 
   return (
     <div className="navbar">
-    <h2 className="title">Flash card App</h2>
+    <h2 className="title"><span style={{color:'black'}}>Simply</span>Study</h2>
       <button className="link" onClick={() => {navigate('/')}}>Home</button>
       <button className="link" onClick={() => {navigate('decks')}}>Decks</button>
       <button className="link" onClick={() => {navigate('cards')}}>Cards</button>

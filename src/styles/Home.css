@@ -13,13 +13,13 @@
   width: 25vw;
   height: 25vh;
   cursor: pointer;
-  background-color:  RGB(55, 71, 79);
+  background-color:  rgb(255, 255, 255);
   border: none;
-  color: rgb(255, 128, 0);
+  color:  rgb(0, 218, 113);
   font-size: 180%;
 }
 
 .study-button:hover {
-  color:rgb(255, 179, 108);
-  background-color: gray;
+  color:rgb(0, 0, 0);
+  background-color: rgb(230, 230, 230);
 }

@@ -18,7 +18,7 @@ export const Home = () => {
 
   return (
     <div className="selection">
-      <p style={{ fontSize: 40 }}>Select a study method</p>
+      <h2 className="header">Select a study method</h2>
       <div className="centered-container">
         <div>
           <div>
