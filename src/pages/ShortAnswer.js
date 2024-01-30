@@ -7,9 +7,10 @@ import { PreStudyInput } from "../components/PrestudyInput"
 import { ConfirmComplete } from "../components/ConfirmComplete"
 import { Results } from "../components/Results"
 import "../styles/Modal.css"
+import { getAuth } from "firebase/auth"
 
 export const ShortAnswer = () => {
-  const [decks, setDecks] = useDeckState()
+  const [decks, setDecks, getDecks] = useDeckState()
   const [studySide, setStudySide] = useState('')
   const [randomCards, setRandomCards] = useState([])
   const [filteredDeck, setFilteredDeck] = useState({ cards: ['initial state'] })
@@ -23,10 +24,16 @@ export const ShortAnswer = () => {
   const [answerMessage, setAnswerMessage] = useState('')
   const [answeredCards, setAnsweredCards] = useState([])
 
+  const auth = getAuth()
+
   useEffect(() => {
-    const storedDecks = localStorage.getItem('decks');
-    if (storedDecks) {
-      setDecks(JSON.parse(storedDecks))
+    if (auth.currentUser !== null) {
+      getDecks()
+    } else {
+      const storedDecks = localStorage.getItem('decks')
+      if (storedDecks) {
+        setDecks(JSON.parse(storedDecks))
+      }
     }
   }, [])
 
@@ -72,16 +79,16 @@ export const ShortAnswer = () => {
 
   const checkAnswer = () => {
     if (studySide == 'front') {
-      if (userInput == randomCards[0].back && wrong == false) {
+      if (userInput == randomCards[0].back && wrong == false || userInput == randomCards[0].back.toLowerCase() && wrong == false) {
         setAnsweredCards(prevAnswered => [{ ...randomCards[0], attempt: 0 }, ...prevAnswered])
-        setRandomCards(randomCards.filter((card) => { return card.back !== userInput }))
+        setRandomCards(randomCards.filter((card) => { return card.back.toLowerCase() !== userInput.toLowerCase()}))
         setAnswerMessage('Correct')
         setScore(score + 1)
         setShowAnswer(false)
         setUserInput('')
-      } else if (userInput == randomCards[0].back && wrong == true) {
+      } else if (userInput == randomCards[0].back && wrong == true || userInput == randomCards[0].back.toLowerCase() && wrong == true) {
         setAnsweredCards(prevAnswered => [randomCards[0], ...prevAnswered])
-        setRandomCards(randomCards.filter((card) => { return card.back !== userInput }))
+        setRandomCards(randomCards.filter((card) => { return card.back.toLowerCase() !== userInput.toLowerCase()}))
         setAnswerMessage('Correct')
         setWrong(false)
         setShowAnswer(false)
@@ -99,16 +106,16 @@ export const ShortAnswer = () => {
         setWrong(true)
         setShowAnswer(false)
       }
-    } else if (userInput == randomCards[0].front && wrong == false) {
+    } else if (userInput == randomCards[0].front && wrong == false || userInput == randomCards[0].front.toLowerCase() && wrong == false) {
       setAnsweredCards(prevAnswered => [{ ...randomCards[0], attempt: 0 }, ...prevAnswered])
-      setRandomCards(randomCards.filter((card) => { return card.front !== userInput }))
+      setRandomCards(randomCards.filter((card) => { return card.front.toLowerCase() !== userInput.toLowerCase() }))
       setAnswerMessage('Correct')
       setScore(score + 1)
       setShowAnswer(false)
       setUserInput('')
-    } else if (userInput == randomCards[0].front && wrong == true) {
+    } else if (userInput == randomCards[0].front && wrong == true || userInput == randomCards[0].front.toLowerCase() && wrong == true) {
       setAnsweredCards(prevAnswered => [randomCards[0], ...prevAnswered])
-      setRandomCards(randomCards.filter((card) => { return card.front !== userInput }))
+      setRandomCards(randomCards.filter((card) => { return card.front.toLowerCase() !== userInput.toLowerCase()}))
       setAnswerMessage('Correct')
       setWrong(false)
       setShowAnswer(false)
@@ -159,16 +166,16 @@ export const ShortAnswer = () => {
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <p style={{ fontSize: '600%' }}>{randomCards[0].front}</p>
                   <div>
-                    <input 
-                    onChange={(event) => { setUserInput(event.target.value) }} 
-                    value={userInput}
-                    style={{ fontSize: '180%' }} 
-                    placeholder="Enter answer..."
-                    onKeyDown={(event) => {
-                      if (event.key == 'Enter') {
-                        checkAnswer()
-                      }
-                    }}
+                    <input
+                      onChange={(event) => { setUserInput(event.target.value) }}
+                      value={userInput}
+                      style={{ fontSize: '180%' }}
+                      placeholder="Enter answer..."
+                      onKeyDown={(event) => {
+                        if (event.key == 'Enter') {
+                          checkAnswer()
+                        }
+                      }}
                     />
                     <button onClick={checkAnswer}
                       className="create"
@@ -178,6 +185,7 @@ export const ShortAnswer = () => {
                   <button
                     onClick={() => {
                       setShowAnswer(!showAnswer)
+                      setWrong(true)
                     }}
                     className="create"
                   >Show Answer</button>
@@ -214,16 +222,16 @@ export const ShortAnswer = () => {
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <p style={{ fontSize: '600%' }}>{randomCards[0].back}</p>
                   <div>
-                    <input 
-                    onChange={(event) => { setUserInput(event.target.value) }} 
-                    value={userInput}
-                    style={{ fontSize: '180%' }} 
-                    placeholder="Enter answer..."
-                    onKeyDown={(event) => {
-                      if (event.key == 'Enter') {
-                        checkAnswer()
-                      }
-                    }}
+                    <input
+                      onChange={(event) => { setUserInput(event.target.value) }}
+                      value={userInput}
+                      style={{ fontSize: '180%' }}
+                      placeholder="Enter answer..."
+                      onKeyDown={(event) => {
+                        if (event.key == 'Enter') {
+                          checkAnswer()
+                        }
+                      }}
                     />
                     <button onClick={checkAnswer}
                       className="create"

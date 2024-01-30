@@ -2,24 +2,26 @@
   cursor:pointer;
   border: none;
   background-color: transparent;
-  color: rgb(255, 128, 0);
+  color: rgb(0, 218, 113);
   font-size: 200%;
   max-width: 17vw;
 }
 
 .option:hover {
-  color:lightblue;
+  color:rgb(0, 0, 0);
 }
 
 .matching-table-details {
   font-size: 200%;
   background-color: gray;
+  color:  rgb(0, 176, 91);
 }
 
 .matching-table-header {
   width:15vw;
   font-size: 200%;
   background-color: black;
+  color:  rgb(0, 176, 91);
 }
 
 .matching-table {

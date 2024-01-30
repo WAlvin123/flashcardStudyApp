@@ -2,22 +2,45 @@ import { useState, useEffect } from "react";
 import { useDeckState } from "../components/useDeckState";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Home.css"
+import { getAuth, signOut } from "firebase/auth";
 
 export const Home = () => {
-  const [decks, setDecks] = useDeckState()
+  const [decks, setDecks, getDecks] = useDeckState()
+  const [user, setUser] = useState(null)
   const navigate = useNavigate()
-  let sum = 0
-
+  let auth
+  if (localStorage.getItem('is_auth') == 'true') {
+    auth = getAuth();
+ } else {
+   auth = getAuth()
+   signOut(auth)
+ }
 
   useEffect(() => {
-    const storedDecks = localStorage.getItem('decks');
-    if (storedDecks) {
-      setDecks(JSON.parse(storedDecks))
-    }
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user)
+        getDecks()
+        localStorage.setItem('signed-in', true)
+      } else {
+        const storedDecks = localStorage.getItem('decks')
+        if (storedDecks) {
+          setDecks(JSON.parse(storedDecks))
+        }
+      }
+    })
+    return unsubscribe
   }, [])
 
   return (
     <div className="selection">
+      {auth.currentUser !== null && (<h2>Welcome {auth.currentUser.email}</h2>)}
+      {auth.currentUser == null && (
+        <h2>
+          You are currently a guest. Cards will<br />
+          not be synced with the database <br />
+        </h2>
+      )}
       <h2 className="header">Select a study method</h2>
       <div className="centered-container">
         <div>
@@ -26,7 +49,7 @@ export const Home = () => {
               MEMORIZATION
             </button>
             <button className='study-button' onClick={() => { navigate('/matching') }}>
-                MATCHING
+              MATCHING
             </button>
           </div>
 
@@ -35,12 +58,11 @@ export const Home = () => {
               MULTIPLE CHOICE
             </button>
             <button className='study-button' onClick={() => { navigate('/shortanswer') }}>
-                SHORT ANSWER
+              SHORT ANSWER
             </button>
           </div>
         </div>
       </div>
-      <h1>Total decks: {decks.length}</h1>
     </div>
   )
 }

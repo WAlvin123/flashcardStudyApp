@@ -7,9 +7,10 @@ import "../styles/Modal.css"
 import { PreStudyInput } from "../components/PrestudyInput";
 import { ConfirmComplete } from "../components/ConfirmComplete";
 import { Results } from "../components/Results";
+import { getAuth } from "firebase/auth";
 
 export const MultipleChoice = () => {
-  const [decks, setDecks] = useDeckState()
+  const [decks, setDecks, getDecks] = useDeckState()
   const [filteredDeck, setFilteredDeck] = useState({ cards: ['initial state'] })
   const [randomCards, setRandomCards] = useState([])
   const [multipleChoice, setMultipleChoice] = useState([])
@@ -23,10 +24,16 @@ export const MultipleChoice = () => {
   const [message, setMessage] = useState('')
   const [answeredCards, setAnsweredCards] = useState([])
 
+  const auth = getAuth()
+
   useEffect(() => {
-    const storedDecks = localStorage.getItem('decks');
-    if (storedDecks) {
-      setDecks(JSON.parse(storedDecks))
+    if (auth.currentUser !== null) {
+      getDecks()
+    } else {
+      const storedDecks = localStorage.getItem('decks')
+      if (storedDecks) {
+        setDecks(JSON.parse(storedDecks))
+      }
     }
   }, [])
 

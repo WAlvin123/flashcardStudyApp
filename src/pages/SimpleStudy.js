@@ -7,17 +7,24 @@ import { PreStudyInput } from '../components/PrestudyInput';
 import { Results } from '../components/Results';
 import { ConfirmComplete } from '../components/ConfirmComplete';
 import "../styles/Modal.css"
+import { getAuth } from 'firebase/auth';
 
 
 export const SimpleStudy = () => {
+  const auth = getAuth()
+
   useEffect(() => {
-    const storedDecks = localStorage.getItem('decks');
-    if (storedDecks) {
-      setDecks(JSON.parse(storedDecks))
+    if (auth.currentUser !== null) {
+      getDecks()
+    } else {
+      const storedDecks = localStorage.getItem('decks')
+      if (storedDecks) {
+        setDecks(JSON.parse(storedDecks))
+      }
     }
   }, [])
 
-  const [decks, setDecks] = useDeckState()
+  const [decks, setDecks, getDecks] = useDeckState()
   const [filteredDeck, setFilteredDeck] = useState({ cards: [] })
   const [randomCards, setRandomCards] = useState([])
   const [answeredCards, setAnsweredCards] = useState([])

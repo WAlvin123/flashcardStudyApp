@@ -6,9 +6,12 @@ import { useDeckState } from "../components/useDeckState";
 import { ConfirmComplete } from "../components/ConfirmComplete";
 import { Results } from "../components/Results";
 import '../styles/Matching.css'
+import { collection, getDocs, query, addDoc, doc, deleteDoc, setDoc } from "firebase/firestore";
+import { db } from "../config/firestore"
+import { getAuth } from "firebase/auth";
 
 export const Matching = () => {
-  const [decks, setDecks] = useDeckState()
+  const [decks, setDecks, getDecks] = useDeckState()
   const [randomCards, setRandomCards] = useState()
   const [columnTwo, setColumnTwo] = useState()
   const [filteredDeck, setFilteredDeck] = useState({ cards: ['initial state'] })
@@ -23,11 +26,16 @@ export const Matching = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [message, setMessage] = useState('')
   const [answeredCards, setAnsweredCards] = useState(['test'])
+  const auth = getAuth()
 
   useEffect(() => {
-    const storedDecks = localStorage.getItem('decks');
-    if (storedDecks) {
-      setDecks(JSON.parse(storedDecks))
+    if (auth.currentUser !== null) {
+      getDecks()
+    } else {
+      const storedDecks = localStorage.getItem('decks')
+      if (storedDecks) {
+        setDecks(JSON.parse(storedDecks))
+      }
     }
   }, [])
 
@@ -198,8 +206,8 @@ export const Matching = () => {
                         <h2 className="header">{answerMessage}</h2>
                         <h2 className="header">Score: {score}</h2>
                         <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }}
-                  className="create"
-                >Finish studying</button>
+                          className="create"
+                        >Finish studying</button>
                       </div>
                     </div>
 

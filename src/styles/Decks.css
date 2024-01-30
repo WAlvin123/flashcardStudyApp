@@ -17,10 +17,10 @@
   background: transparent;
   border: none;
   cursor:pointer;
-  color:  rgb(0, 218, 113);}
+  color:  rgb(0, 176, 91);}
 
 .create:hover {
-  color: rgb(110, 137, 255);}
+  color: rgb(0, 0, 0);}
 
 .deck-submit {
   display:flex;

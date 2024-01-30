@@ -9,13 +9,15 @@ import { Matching } from './pages/Matching';
 import { Import } from './pages/Import';
 import { SimpleStudy } from './pages/SimpleStudy';
 import { Decks } from './pages/Decks';
+import { SignIn } from "./pages/SignIn";
+import { Register } from "./pages/Register";
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 
 function App() {
 
   return (
     <div className="App">
-      <div className="title">
-      </div>
       <Router>
         <Navbar />
         <Routes>
@@ -27,6 +29,8 @@ function App() {
           <Route path='/multiplechoice' element={<MultipleChoice/>}/>
           <Route path='/shortanswer' element={<ShortAnswer/>}/>
           <Route path='/importdeck' element={<Import/>}/>
+          <Route path='/signin' element={<SignIn/>}/>
+          <Route path='register' element={<Register/>}/>
         </Routes>
       </Router>
     </div>

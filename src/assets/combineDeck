@@ -1,0 +1,76 @@
+/*
+const combineDecks = () => {
+    if (mainDeck.cards !== undefined && subDeck.cards !== undefined) {
+      const cardFronts = mainDeck.cards.map((card) => { return card.front })
+      const cardBacks = mainDeck.cards.map((card) => { return card.back })
+
+      let maxID = 0
+      mainDeck.cards.forEach(card => {
+        if (card.id > maxID) {
+          maxID = card.id
+        }
+      })
+
+      subDeck.cards.forEach(card => {
+        if (!cardFronts.includes(card.front) && !cardBacks.includes(card.back)) {
+          mainDeck.cards.push({ ...card, id: maxID++ })
+        }
+      })
+      const updatedDecks = decks.filter(deck => deck.id !== subDeck.id)
+      setDecks(updatedDecks)
+      setCombineState(0)
+      setMainDeck({})
+      setSubDeck({})
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+    } else console.log('select something')
+  }
+
+  {combineState == 1 && (
+    <button onClick={() => {
+      setCombineState(2)
+      setMainDeck({ ...deck })
+    }}
+    className="create"
+    >
+      Set main deck
+    </button>
+  )
+  }
+
+  {(combineState == 2 && deck.id !== mainDeck.id) && (
+    <button onClick={() => {
+      setSubDeck(deck)
+    }}
+    className="create"
+    >
+      Set sub deck
+    </button>
+  )
+  }
+  */
+
+    /* const combineDecks = () => {
+    if (mainDeck.cards !== undefined && subDeck.cards !== undefined) {
+      const cardFronts = mainDeck.cards.map((card) => { return card.front })
+      const cardBacks = mainDeck.cards.map((card) => { return card.back })
+
+      let maxID = 0
+      mainDeck.cards.forEach(card => {
+        if (card.id > maxID) {
+          maxID = card.id
+        }
+      })
+
+      subDeck.cards.forEach(card => {
+        if (!cardFronts.includes(card.front) && !cardBacks.includes(card.back)) {
+          mainDeck.cards.push({ ...card, id: maxID++ })
+        }
+      })
+      const updatedDecks = decks.filter(deck => deck.id !== subDeck.id)
+      setDecks(updatedDecks)
+      setCombineState(0)
+      setMainDeck({})
+      setSubDeck({})
+      localStorage.setItem('decks', JSON.stringify(updatedDecks))
+    } else console.log('select something')
+  } */
