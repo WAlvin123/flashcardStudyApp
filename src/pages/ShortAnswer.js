@@ -10,6 +10,7 @@ import "../styles/Modal.css"
 import { getAuth } from "firebase/auth"
 
 export const ShortAnswer = () => {
+  const [modalState, setModalState] = useState(false)
   const [decks, setDecks, getDecks] = useDeckState()
   const [studySide, setStudySide] = useState('')
   const [randomCards, setRandomCards] = useState([])
@@ -74,6 +75,7 @@ export const ShortAnswer = () => {
       setStudySide(submission.studySide)
       setRandomCards(smallerArray)
       setTotal(submission.studyAmount)
+      setModalState(true)
     }
   }
 
@@ -81,14 +83,14 @@ export const ShortAnswer = () => {
     if (studySide == 'front') {
       if (userInput == randomCards[0].back && wrong == false || userInput == randomCards[0].back.toLowerCase() && wrong == false) {
         setAnsweredCards(prevAnswered => [{ ...randomCards[0], attempt: 0 }, ...prevAnswered])
-        setRandomCards(randomCards.filter((card) => { return card.back.toLowerCase() !== userInput.toLowerCase()}))
+        setRandomCards(randomCards.filter((card) => { return card.back.toLowerCase() !== userInput.toLowerCase() }))
         setAnswerMessage('Correct')
         setScore(score + 1)
         setShowAnswer(false)
         setUserInput('')
       } else if (userInput == randomCards[0].back && wrong == true || userInput == randomCards[0].back.toLowerCase() && wrong == true) {
         setAnsweredCards(prevAnswered => [randomCards[0], ...prevAnswered])
-        setRandomCards(randomCards.filter((card) => { return card.back.toLowerCase() !== userInput.toLowerCase()}))
+        setRandomCards(randomCards.filter((card) => { return card.back.toLowerCase() !== userInput.toLowerCase() }))
         setAnswerMessage('Correct')
         setWrong(false)
         setShowAnswer(false)
@@ -115,7 +117,7 @@ export const ShortAnswer = () => {
       setUserInput('')
     } else if (userInput == randomCards[0].front && wrong == true || userInput == randomCards[0].front.toLowerCase() && wrong == true) {
       setAnsweredCards(prevAnswered => [randomCards[0], ...prevAnswered])
-      setRandomCards(randomCards.filter((card) => { return card.front.toLowerCase() !== userInput.toLowerCase()}))
+      setRandomCards(randomCards.filter((card) => { return card.front.toLowerCase() !== userInput.toLowerCase() }))
       setAnswerMessage('Correct')
       setWrong(false)
       setShowAnswer(false)
@@ -136,7 +138,6 @@ export const ShortAnswer = () => {
   }
 
   const handleFinishStudy = () => {
-    if (randomCards.length !== 0) {
       setScore(0)
       setStudySide('')
       setUserInput('')
@@ -144,21 +145,32 @@ export const ShortAnswer = () => {
       setShowAnswer(false)
       setAnsweredCards([])
       setAnswerMessage('')
-    } else { // add this to total study score
-      setScore(0)
-      setStudySide('')
-      setUserInput('')
-      setConfirmationMessage('')
-      setShowAnswer(false)
-      setAnsweredCards([])
-      setAnswerMessage('')
-    }
+      localStorage.removeItem('ss-cards')
+      localStorage.removeItem('ss-score')
+      localStorage.removeItem('ss-side')
+
+  }
+
+  const leaveStudy = () => {
+    setModalState(false)
+    setAnswerMessage('')
+    setConfirmationMessage('')
+    localStorage.setItem('ss-cards', JSON.stringify(randomCards))
+    localStorage.setItem('ss-score', JSON.stringify(score))
+    localStorage.setItem('ss-side', JSON.stringify(studySide))
+  }
+
+  const handleResume = () => {
+    setModalState(true)
+    setRandomCards(JSON.parse(localStorage.getItem('ss-cards')))
+    setScore(JSON.parse(localStorage.getItem('ss-score')))
+    setStudySide(JSON.parse(localStorage.getItem('ss-side')))
   }
 
   return (
 
     <div>
-      {(studySide == 'front') && (
+      {(studySide == 'front' && modalState == true) && (
         <div class='modalBackground'>
           <div class='modalContainer'>
             {randomCards.length !== 0 && confirmationMessage == '' && (
@@ -200,7 +212,7 @@ export const ShortAnswer = () => {
             <ConfirmComplete
               message={confirmationMessage}
               setMessage={setConfirmationMessage}
-              handleFinishStudy={handleFinishStudy} />
+              handleFinishStudy={leaveStudy} />
 
 
             <Results
@@ -214,7 +226,7 @@ export const ShortAnswer = () => {
         </div>
       )}
 
-      {(studySide == 'back') && (
+      {(studySide == 'back'  && modalState == true) && (
         <div class='modalBackground'>
           <div class='modalContainer'>
             {randomCards.length !== 0 && confirmationMessage == '' && (
@@ -256,7 +268,7 @@ export const ShortAnswer = () => {
             <ConfirmComplete
               message={confirmationMessage}
               setMessage={setConfirmationMessage}
-              handleFinishStudy={handleFinishStudy} />
+              handleFinishStudy={leaveStudy} />
 
             <Results
               randomCards={randomCards}
@@ -285,6 +297,10 @@ export const ShortAnswer = () => {
         onSubmit={onSubmit}
         register={register}
         errors={errors} />
+      {localStorage.getItem('ss-cards') && (
+        <button className='create' onClick={handleResume}>
+          Resume studying
+        </button>)}
     </div>
   )
 }

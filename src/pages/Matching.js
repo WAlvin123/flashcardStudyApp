@@ -144,17 +144,6 @@ export const Matching = () => {
   }
 
   const handleFinishStudy = () => {
-    if (randomCards.length !== 0) {
-      setScore(0)
-      setModalState(false)
-      setAnswerMessage('')
-      setChoiceOne('')
-      setChoiceTwo('')
-      setAnswerMessage('')
-      setMessage('')
-      setAnsweredCards([])
-      console.log('score not added')
-    } else {
       setScore(0)
       setModalState(false)
       setAnswerMessage('')
@@ -164,7 +153,27 @@ export const Matching = () => {
       setMessage('')
       setAnsweredCards([])
       console.log('score added')
-    }
+      localStorage.removeItem('c1')
+      localStorage.removeItem('c2')
+      localStorage.removeItem('m-score')
+  }
+
+  const leaveStudy = () => {
+    setModalState(false)
+    setAnswerMessage('')
+    setMessage('')
+    localStorage.setItem('c1', JSON.stringify(randomCards))
+    localStorage.setItem('c2', JSON.stringify(columnTwo))
+    localStorage.setItem('m-score', JSON.stringify(score))
+    setChoiceOne('')
+    setChoiceTwo('')
+  }
+
+  const handleResume = () => {
+    setModalState(true)
+    setRandomCards(JSON.parse(localStorage.getItem('c1')))
+    setColumnTwo(JSON.parse(localStorage.getItem('c2')))
+    setScore(JSON.parse(localStorage.getItem('m-score')))
   }
 
   return (
@@ -231,7 +240,7 @@ export const Matching = () => {
             <ConfirmComplete
               message={message}
               setMessage={setMessage}
-              handleFinishStudy={handleFinishStudy}
+              handleFinishStudy={leaveStudy}
             />
 
             <Results
@@ -284,6 +293,11 @@ export const Matching = () => {
             <p>
               {errors.studyAmount?.message}
             </p>
+            <button onClick={() => {
+              handleResume()
+            }}>
+              Resume Study
+            </button>
           </div>
         </div>
       </div>

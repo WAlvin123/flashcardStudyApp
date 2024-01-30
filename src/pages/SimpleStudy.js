@@ -90,7 +90,6 @@ export const SimpleStudy = () => {
         return false
       }
     })
-
     setAnswerState(0)
   }
 
@@ -100,26 +99,34 @@ export const SimpleStudy = () => {
       const remainingCards = prevRandom.slice(1)
       remainingCards.sort(() => Math.random() - 0.5)
       const updatedRandomCards = [...remainingCards, firstCard]
+      localStorage.setItem('simple', JSON.stringify(updatedRandomCards))
       setAnswerState(0)
-      console.log(updatedRandomCards)
       return updatedRandomCards
     })
   }
 
   const handleFinishStudy = () => {
-    if (randomCards.length !== 0) {
-      setModalState(false)
-      setScore(0)
-      setAnswerState(0)
-      setMessage('')
-      setAnsweredCards([])
-    } else { // add this to total study score
-      setModalState(false)
-      setScore(0)
-      setAnswerState(0)
-      setMessage('')
-      setAnsweredCards([])
-    }
+    setModalState(false)
+    setScore(0)
+    setAnswerState(0)
+    setMessage('')
+    setAnsweredCards([])
+    localStorage.removeItem('simple')
+    localStorage.removeItem('simple-score')
+  }
+
+  const leaveStudy = () => {
+    setMessage('')
+    setModalState(false)
+    localStorage.setItem('simple', JSON.stringify(randomCards))
+    localStorage.setItem('side', JSON.stringify(studySide))
+    localStorage.setItem('simple-score', JSON.stringify(score))
+  }
+
+  const handleResume = () => {
+    setRandomCards(JSON.parse(localStorage.getItem('simple')))
+    setScore(JSON.parse(localStorage.getItem('simple-score')))
+    setStudySide(JSON.parse(localStorage.getItem('side')))
   }
 
   return (
@@ -151,14 +158,14 @@ export const SimpleStudy = () => {
                 )}
                 <h3 className='header'>Cards remaining: {randomCards.length}</h3>
                 <h3 className='header'>Score: {score}</h3>
-                <button onClick={() => { setMessage("Are you sure you would like to finish studying before all questions have been answered? Doing so will not add to the weekly studied amount.") }} className='create'>Finish studying</button>
+                <button onClick={() => { setMessage("You can resume this session later") }} className='create'>Finish studying</button>
               </div>
             )}
 
             <ConfirmComplete
               message={message}
               setMessage={setMessage}
-              handleFinishStudy={handleFinishStudy} />
+              handleFinishStudy={leaveStudy} />
 
             <Results
               randomCards={randomCards}
@@ -202,7 +209,7 @@ export const SimpleStudy = () => {
             <ConfirmComplete
               message={message}
               setMessage={setMessage}
-              handleFinishStudy={handleFinishStudy} />
+              handleFinishStudy={leaveStudy} />
 
             <Results
               randomCards={randomCards}
@@ -232,6 +239,17 @@ export const SimpleStudy = () => {
         onSubmit={onSubmit}
         register={register}
         errors={errors} />
+
+      {localStorage.getItem('simple') && (
+
+        <button className='create'
+          onClick={() => {
+            setModalState(true)
+            handleResume()
+          }}
+        >
+          Resume studying
+        </button>)}
     </div>
   )
 }

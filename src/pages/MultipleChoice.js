@@ -23,6 +23,7 @@ export const MultipleChoice = () => {
   const [total, setTotal] = useState(0)
   const [message, setMessage] = useState('')
   const [answeredCards, setAnsweredCards] = useState([])
+  const [modalState, setModalState] = useState(false)
 
   const auth = getAuth()
 
@@ -76,6 +77,7 @@ export const MultipleChoice = () => {
         setStudySide(submission.studySide)
         setRandomCards(smallerArray)
         handleMC(smallerArray[0])
+        setModalState(true)
       }
     }
   }
@@ -199,28 +201,37 @@ export const MultipleChoice = () => {
   }
 
   const handleFinishStudy = () => {
-    if (randomCards.length !== 0) {
       setWrong(false)
       setStudySide('')
       setAnswerMessage('')
       setScore(0)
       setMessage('')
       setChoice('')
-      setAnsweredCards([])
-    } else { // add this to total study score
-      setWrong(false)
-      setStudySide('')
-      setAnswerMessage('')
-      setScore(0)
-      setMessage('')
-      setChoice('')
-      setAnsweredCards([])
-    }
+      setAnsweredCards([]) 
+  }
+
+  const leaveStudy = () => {
+    setModalState(false)
+    setAnswerMessage('')
+    setMessage('')
+    setChoice('')
+    localStorage.setItem('mc-cards', JSON.stringify(randomCards))
+    localStorage.setItem('mc-choices', JSON.stringify(multipleChoice))
+    localStorage.setItem('mc-score', JSON.stringify(score))
+    localStorage.setItem('mc-side', JSON.stringify(studySide))
+  }
+
+  const handleResume = () => {
+    setModalState(true)
+    setRandomCards(JSON.parse(localStorage.getItem('mc-cards')))
+    setMultipleChoice(JSON.parse(localStorage.getItem('mc-choices')))
+    setScore(JSON.parse(localStorage.getItem('mc-score')))
+    setStudySide(JSON.parse(localStorage.getItem('mc-side')))
   }
 
   return (
     <div>
-      {studySide == 'front' && (
+      {studySide == 'front' && modalState == true && (
         <div class='modalBackground'>
           <div class='modalContainer'>
             {randomCards.length !== 0 && message == '' && (
@@ -257,7 +268,7 @@ export const MultipleChoice = () => {
             <ConfirmComplete
               message={message}
               setMessage={setMessage}
-              handleFinishStudy={handleFinishStudy} />
+              handleFinishStudy={leaveStudy} />
 
             <Results
               randomCards={randomCards}
@@ -307,7 +318,7 @@ export const MultipleChoice = () => {
             <ConfirmComplete
               message={message}
               setMessage={setMessage}
-              handleFinishStudy={handleFinishStudy} />
+              handleFinishStudy={leaveStudy} />
 
 
             <Results
@@ -338,6 +349,11 @@ export const MultipleChoice = () => {
         onSubmit={onSubmit}
         register={register}
         errors={errors} />
+        {localStorage.getItem('mc-cards') && (
+        <button className='create' onClick={handleResume}> 
+          Resume Study
+        </button>
+        )}
     </div>
   )
 }
